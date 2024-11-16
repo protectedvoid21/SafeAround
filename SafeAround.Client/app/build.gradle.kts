@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
+    kotlin("plugin.serialization")
 }
 
 android {
@@ -42,6 +43,9 @@ android {
 }
 
 dependencies {
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.cio)
     implementation(libs.maps.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.core.ktx)

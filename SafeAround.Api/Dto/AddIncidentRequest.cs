@@ -2,9 +2,9 @@ namespace SafeAround.Api.Dto;
 
 public class AddIncidentRequest
 {
-    public string Title { get; set; }
-    public string Description { get; set; }
-    public float Latitude { get; set; }
-    public float Longitude { get; set; }
-    public DateTime Date { get; set; }
+    public required string Title { get; set; }
+    public required string Description { get; set; }
+    public required float Latitude { get; set; }
+    public required float Longitude { get; set; }
+    public required DateTime Date { get; set; }
 }

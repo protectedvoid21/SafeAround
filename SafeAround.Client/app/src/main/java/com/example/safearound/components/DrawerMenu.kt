@@ -1,5 +1,6 @@
 package com.example.safearound.components
 
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -12,6 +13,7 @@ import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.sharp.AccountCircle
 import androidx.compose.material3.Button
+import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -23,10 +25,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -64,12 +68,12 @@ fun DrawerItem (drawerData: DrawerDataEntry, navController: NavController) {
 @Composable
 fun DrawerMenu(
     navController: NavController,
-    drawerState: MutableState<Boolean>,
+    drawerState: DrawerState,
     content: @Composable () -> Unit
 ) {
     ModalNavigationDrawer(
-        drawerState = rememberDrawerState(if (drawerState.value) DrawerValue.Open else DrawerValue.Closed),
-        gesturesEnabled = false,
+        drawerState = drawerState,
+        gesturesEnabled = drawerState.isOpen,
         drawerContent = {
             ModalDrawerSheet {
                 Text(
@@ -94,7 +98,6 @@ fun DrawerMenu(
                 }
             }
         },
-        modifier = Modifier.zIndex(1f)
     ) {
         content()
     }
@@ -104,9 +107,9 @@ fun DrawerMenu(
 @Composable
 fun DrawerMenuPreview() {
     val navController = rememberNavController()
-    val drawerState = remember { mutableStateOf(true) }
+    val drawerState = rememberDrawerState(DrawerValue.Open)
     DrawerMenu(navController, drawerState) {
-        Button(onClick = { drawerState.value = true }) {
+        Button(onClick = {  }) {
             Text(text = "Open Drawer")
         }
     }

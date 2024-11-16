@@ -1,4 +1,6 @@
-using SafeAround.Api.Persistence;
+using Microsoft.AspNetCore.Mvc;
+using SafeAround.Api.Dto;
+using SafeAround.Api.Services;
 
 namespace SafeAround.Api.Endpoints;
 
@@ -8,11 +10,20 @@ public class IncidentApi : IEndpointMap
     {
         var group = routes.MapGroup("/incidents");
         
-        group.MapGet("/", async (SafeAroundDbContext dbContext) =>
+        group.MapGet("/", async ([FromServices] IncidentService incidentService) =>
         {
-            return await dbContext.Incidents.ToListAsync();
+            return Results.Ok(await incidentService.GetAllAsync());
         });
-
-        return routes;
+        
+        group.MapGet("/{id}", async ([FromServices] IncidentService incidentService, Guid id) =>
+        {
+            return Results.Ok(await incidentService.GetAllAsync());
+        });
+        
+        group.MapPost("/", async ([FromServices] IncidentService incidentService, AddIncidentRequest incidentRequest) =>
+        {
+            var result = await incidentService.AddAsync(incidentRequest, Guid.NewGuid());
+            return result.IsSuccess ? Results.Created($"/incidents", result) : Results.BadRequest(result);
+        });
     }
 }

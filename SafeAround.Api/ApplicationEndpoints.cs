@@ -9,7 +9,7 @@ public static class ApplicationEndpoints
         new IncidentApi()
     ];
     
-    public static IEndpointRouteBuilder MapEndpoints(this IEndpointRouteBuilder routes)
+    public static void MapEndpoints(this IEndpointRouteBuilder routes)
     {
         foreach(var endpoint in Endpoints)
         {

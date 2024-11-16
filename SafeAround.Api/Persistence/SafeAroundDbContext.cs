@@ -7,7 +7,7 @@ namespace SafeAround.Api.Persistence;
 
 public class SafeAroundDbContext : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>
 {
-    public SafeAroundDbContext(DbContextOptions<SafeAroundDbContext> options) {}
+    public SafeAroundDbContext(DbContextOptions<SafeAroundDbContext> options) : base(options) {}
 
     public DbSet<Incident> Incidents { get; set; }
     
