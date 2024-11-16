@@ -33,6 +33,7 @@ import com.example.safearound.components.DrawerMenu
 import com.example.safearound.pages.Map
 import com.example.safearound.pages.Reports
 import com.example.safearound.ui.theme.SafeAroundTheme
+import com.example.safearound.viewmodels.MapViewModel
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -76,7 +77,7 @@ class MainActivity : ComponentActivity() {
                         }
                     ) { _ ->
                         NavHost(navController = navController, startDestination = "home") {
-                            composable("home") { Map(navController) }
+                            composable("home") { Map(MapViewModel()) }
                             composable("reports") { Reports() }
                         }
                     }
