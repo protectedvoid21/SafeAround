@@ -1,0 +1,9 @@
+.idea/*
+SafeAround.Api/logs/*
+SafeAround.Api/bin/*
+SafeAround.Api/obj/*
+SafeAround.Client/.gradle
+SafeAround.Client/.kotlin
+SafeAround.Client/.idea
+localhost-key.pem
+localhost.pem
