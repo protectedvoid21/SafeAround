@@ -6,10 +6,11 @@ public class Seeder
 
     public Seeder(
         UserSeeder userSeeder,
-        IncidentSeeder incidentSeeder
+        IncidentSeeder incidentSeeder,
+        IncidentCategorySeeder incidentCategorySeeder
     )
     {
-        _seeders = [userSeeder, incidentSeeder];
+        _seeders = [userSeeder, incidentCategorySeeder, incidentSeeder];
     }
 
     public void Seed()

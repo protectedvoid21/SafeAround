@@ -2,8 +2,13 @@ package com.example.safearound.pages
 
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.drawable.Drawable
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -15,13 +20,19 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
+import com.example.safearound.R
+import com.example.safearound.helpers.getIconForCategory
+import com.example.safearound.helpers.vectorToBitmap
 import com.example.safearound.models.Incident
 import com.example.safearound.services.SafeAroundClient
 import com.example.safearound.viewmodels.MapViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -82,7 +93,7 @@ fun Map(mapViewModel: MapViewModel) {
             }
             userLocation?.let {
                 Marker(
-                    state = MarkerState(position = it, ),
+                    state = MarkerState(position = it),
                     title = "Twoja lokalizacja",
                     snippet = "Tutaj jest twoje położenie"
                 )
@@ -97,6 +108,7 @@ fun Map(mapViewModel: MapViewModel) {
 
             incidents.forEach { incident ->
                 Marker(
+                    icon = vectorToBitmap(context, getIconForCategory(incident.categoryCode)),
                     state = rememberMarkerState(position = LatLng(incident.latitude, incident.longitude)),
                     title = incident.title,
                     snippet = incident.description

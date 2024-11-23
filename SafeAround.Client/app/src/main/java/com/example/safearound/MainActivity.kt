@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -92,12 +94,12 @@ class MainActivity : ComponentActivity() {
 fun RoundedButtonPreview() {
     OutlinedButton(onClick = {},
         modifier = Modifier.clip(RoundedCornerShape(200.dp))) { }
-    /*Button(
+    Button(
         onClick = { },
         shape = CircleShape,
-    ) {*//*
+    ) {
         Icon(imageVector = Icons.Filled.Add, contentDescription = "Add",
             modifier = Modifier.padding(100.dp)
-        )*//*
-    }*/
+        )
+    }
 }

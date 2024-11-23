@@ -11,7 +11,7 @@ import io.ktor.client.statement.bodyAsText
 import kotlinx.serialization.json.Json
 
 class SafeAroundClient {
-    val client = HttpClient(CIO)
+    private val client = HttpClient(CIO)
     private val json = Json { ignoreUnknownKeys = true }
 
     companion object {

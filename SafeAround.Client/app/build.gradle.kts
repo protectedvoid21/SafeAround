@@ -10,6 +10,10 @@ android {
     namespace = "com.example.safearound"
     compileSdk = 34
 
+    packaging {
+        resources.excludes.add("META-INF/versions/9/OSGI-INF/MANIFEST.MF")
+    }
+
     defaultConfig {
         applicationId = "com.example.safearound"
         minSdk = 26
@@ -60,6 +64,7 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.play.services.location)
+    implementation(libs.identity.jvm)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

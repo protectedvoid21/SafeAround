@@ -25,6 +25,11 @@ public class IncidentSeeder : ISeeder
             return;
         }
         
+        if(!_context.IncidentCategories.Any())
+        {
+            throw new Exception("Incident categories are not seeded yet.");
+        }
+        
         var exampleTitles = LoadExampleTitles();
 
         var faker = new Faker<Incident>()
@@ -34,6 +39,7 @@ public class IncidentSeeder : ISeeder
             .RuleFor(p => p.Latitude, f => (float)f.Address.Latitude(51d, 51.19d))
             .RuleFor(p => p.CreatedOn, f => f.Date.Recent())
             .RuleFor(p => p.User, f => f.PickRandom(_context.Users.ToList()))
+            .RuleFor(p => p.Category, f => f.PickRandom(_context.IncidentCategories.ToList()))
             .RuleFor(p => p.Title, f => f.PickRandom(exampleTitles));
         
         var incidents = faker.Generate(250);

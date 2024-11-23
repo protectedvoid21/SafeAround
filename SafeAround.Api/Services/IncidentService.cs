@@ -15,14 +15,39 @@ public class IncidentService
         _dbContext = dbContext;
     }
     
-    public async Task<Incident?> GetByIdAsync(int id)
+    public async Task<GetIncidentResponse?> GetByIdAsync(int id)
     {
-        return await _dbContext.Incidents.FirstOrDefaultAsync(x => x.Id == id);
+        return await _dbContext.Incidents
+            .Select(i => new GetIncidentResponse
+            {
+                Id = i.Id,
+                Title = i.Title,
+                Description = i.Description,
+                Latitude = i.Latitude,
+                Longitude = i.Longitude,
+                OccurrenceDate = i.OccurrenceDate,
+                CategoryId = i.CategoryId,
+                CategoryName = i.Category.Name,
+                CategoryCode = i.Category.Code,
+                UserId = i.User.Id
+            }).FirstOrDefaultAsync();
     }
     
-    public async Task<List<Incident>> GetAllAsync()
+    public async Task<List<GetIncidentResponse>> GetAllAsync()
     {
-        return await _dbContext.Incidents.ToListAsync();
+        return await _dbContext.Incidents.Select(i => new GetIncidentResponse
+        {
+            Id = i.Id,
+            Title = i.Title,
+            Description = i.Description,
+            Latitude = i.Latitude,
+            Longitude = i.Longitude,
+            OccurrenceDate = i.OccurrenceDate,
+            CategoryId = i.CategoryId,
+            CategoryName = i.Category.Name,
+            CategoryCode = i.Category.Code,
+            UserId = i.User.Id
+        }).ToListAsync();
     }
 
     public async Task<Result> AddAsync(AddIncidentRequest request, Guid userId)
@@ -34,7 +59,8 @@ public class IncidentService
             Latitude = request.Latitude,
             Longitude = request.Longitude,
             OccurrenceDate = request.Date,
-            UserId = userId
+            UserId = userId,
+            CategoryId = request.CategoryId
         };
 
         _dbContext.Add(incident);

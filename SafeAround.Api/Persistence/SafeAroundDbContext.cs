@@ -10,6 +10,7 @@ public class SafeAroundDbContext : IdentityDbContext<AppUser, IdentityRole<Guid>
     public SafeAroundDbContext(DbContextOptions<SafeAroundDbContext> options) : base(options) {}
 
     public DbSet<Incident> Incidents { get; set; }
+    public DbSet<IncidentCategory> IncidentCategories { get; set; }
     
     private void UpdateBaseTrackingEntities()
     {
