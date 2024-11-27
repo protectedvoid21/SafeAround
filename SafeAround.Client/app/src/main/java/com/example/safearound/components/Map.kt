@@ -29,7 +29,6 @@ import com.example.safearound.helpers.vectorToBitmap
 import com.example.safearound.models.Incident
 import com.example.safearound.services.SafeAroundClient
 import com.example.safearound.viewmodels.MapViewModel
-import com.example.safearound.viewmodels.MarkerData
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -127,7 +126,7 @@ fun Map(mapViewModel: MapViewModel) {
 }
 
 @Composable
-fun IncidentMarker(incident: Incident, cameraPositionState: CameraPositionState, onMarkerClicked: (MarkerData) -> Unit) {
+fun IncidentMarker(incident: Incident, cameraPositionState: CameraPositionState, onMarkerClicked: (Incident) -> Unit) {
     val context: Context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
@@ -147,13 +146,7 @@ fun IncidentMarker(incident: Incident, cameraPositionState: CameraPositionState,
                     )
                 )
             }
-            onMarkerClicked(
-                MarkerData(
-                    id = incident.id.toString(),
-                    title = incident.title,
-                    description = incident.description
-                )
-            )
+            onMarkerClicked(incident)
             true
         },
         title = incident.title,

@@ -13,12 +13,20 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.safearound.viewmodels.MarkerData
+import com.example.safearound.models.Incident
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.format
+import kotlinx.datetime.format.DateTimeFormat
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun IncidentSheet(clickedMarker: MarkerData?, onDismiss: () -> Unit) {
+fun IncidentSheet(clickedMarker: Incident?, onDismiss: () -> Unit) {
     val sheetState = rememberModalBottomSheetState()
 
     LaunchedEffect(clickedMarker) {
@@ -37,7 +45,17 @@ fun IncidentSheet(clickedMarker: MarkerData?, onDismiss: () -> Unit) {
             Column(Modifier.padding(16.dp)) {
                 Text(
                     text = clickedMarker.title,
-                    style = MaterialTheme.typography.headlineSmall
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = clickedMarker.categoryName,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "Zgłoszono: " + clickedMarker.occurrenceDate.toString(),
+                    style = MaterialTheme.typography.bodyMedium
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
@@ -47,4 +65,24 @@ fun IncidentSheet(clickedMarker: MarkerData?, onDismiss: () -> Unit) {
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun IncidentSheetPreview() {
+    IncidentSheet(
+        clickedMarker = Incident(
+            id = 1,
+            title = "Zderzenie na Kościuszki",
+            description = "Ruch został zablokowany na ulicy Kościuszki w obu kierunkach. Kierowcy proszeni są o zachowanie ostrożności.",
+            latitude = 51.09,
+            longitude = 17.0400,
+            categoryId = 1,
+            categoryName = "Wypadek samochodowy",
+            categoryCode = "CAR_ACCIDENT",
+            occurrenceDate = LocalDateTime(2024, 11, 21, 12, 43, 50),
+            userId = "asdkpoaskdopk1opk2o",
+        ),
+        onDismiss = {}
+    )
 }

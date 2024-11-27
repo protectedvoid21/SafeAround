@@ -11,11 +11,11 @@ import com.example.safearound.components.Map
 
 @Composable
 fun Home(mapViewModel: MapViewModel) {
-    val clickedMarker by mapViewModel.clickedMarker
+    val clickedIncident by mapViewModel.clickedIncident
 
     Box(Modifier.fillMaxSize()) {
         IncidentSheet(
-            clickedMarker = clickedMarker,
+            clickedMarker = clickedIncident,
             onDismiss = {
                 mapViewModel.onMarkerClicked(null)
             }

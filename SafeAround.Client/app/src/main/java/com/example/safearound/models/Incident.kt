@@ -1,6 +1,9 @@
 package com.example.safearound.models
 
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
+
 
 @Serializable
 data class Incident (
@@ -12,8 +15,7 @@ data class Incident (
     val categoryId: Int,
     val categoryName: String,
     val categoryCode: String,
-    //val date: LocalDate,
-    //val createdOn: DateTime,
-    //val userId: UUID,
+    val occurrenceDate: LocalDateTime,
+    val userId: String,
 ){
 }

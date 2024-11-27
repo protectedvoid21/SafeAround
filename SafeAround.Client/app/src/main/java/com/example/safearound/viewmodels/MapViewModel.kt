@@ -6,17 +6,18 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
+import com.example.safearound.models.Incident
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.maps.model.LatLng
 
 class MapViewModel : ViewModel() {
-    private val _clickedMarker = mutableStateOf<MarkerData?>(null)
-    val clickedMarker: State<MarkerData?> = _clickedMarker
+    private val _clickedMarker = mutableStateOf<Incident?>(null)
+    val clickedIncident: State<Incident?> = _clickedMarker
 
     private val _userLocation = mutableStateOf<LatLng?>(null)
     val userLocation: State<LatLng?> = _userLocation
 
-    fun onMarkerClicked(markerData: MarkerData?) {
+    fun onMarkerClicked(markerData: Incident?) {
         _clickedMarker.value = markerData
     }
 
@@ -34,5 +35,3 @@ class MapViewModel : ViewModel() {
         }
     }
 }
-
-data class MarkerData(val id: String, val title: String, val description: String)
