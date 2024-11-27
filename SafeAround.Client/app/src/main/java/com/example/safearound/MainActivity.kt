@@ -32,7 +32,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.safearound.components.DrawerMenu
-import com.example.safearound.pages.Map
+import com.example.safearound.pages.Home
 import com.example.safearound.pages.Reports
 import com.example.safearound.ui.theme.SafeAroundTheme
 import com.example.safearound.viewmodels.MapViewModel
@@ -76,10 +76,10 @@ class MainActivity : ComponentActivity() {
                             ) {
                                 Icon(imageVector = Icons.Filled.Add, contentDescription = "Add")
                             }
-                        }
+                        },
                     ) { _ ->
                         NavHost(navController = navController, startDestination = "home") {
-                            composable("home") { Map(MapViewModel()) }
+                            composable("home") { Home(MapViewModel()) }
                             composable("reports") { Reports() }
                         }
                     }

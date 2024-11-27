@@ -15,7 +15,7 @@ class SafeAroundClient {
     private val json = Json { ignoreUnknownKeys = true }
 
     companion object {
-        private const val BASE_URL = "http://10.0.2.2:5178"
+        private const val BASE_URL = "http://192.168.0.24:7177"
     }
 
     suspend fun getIncidents(): List<Incident> {
