@@ -20,6 +20,10 @@ class SafeAroundClient {
 
     suspend fun getIncidents(): List<Incident> {
         val response: HttpResponse = client.get("$BASE_URL/incidents")
+        if(response.status.value != 200) {
+            throw Exception("Could not connect to the server")
+        }
+
         val content = response.bodyAsText()
 
         return json.decodeFromString<List<Incident>>(content)

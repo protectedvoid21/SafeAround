@@ -74,4 +74,4 @@ var scope = app.Services.CreateScope();
 var seeder = scope.ServiceProvider.GetRequiredService<Seeder>();
 seeder.Seed();
 
-app.Run("http://192.168.0.24:7177");
+app.Run();

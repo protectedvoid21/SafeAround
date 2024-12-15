@@ -1,6 +1,5 @@
 package com.example.safearound.components
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -18,11 +17,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.safearound.models.Incident
 import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.format
-import kotlinx.datetime.format.DateTimeFormat
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeFormatterBuilder
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
