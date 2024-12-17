@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SafeAround.Api.Dto;
+using SafeAround.Api.Models;
 using SafeAround.Api.Services;
 
 namespace SafeAround.Api.Endpoints;
@@ -22,8 +23,8 @@ public class IncidentApi : IEndpointMap
         
         group.MapPost("/", async ([FromServices] IncidentService incidentService, AddIncidentRequest incidentRequest) =>
         {
-            var result = await incidentService.AddAsync(incidentRequest, Guid.NewGuid());
-            return result.IsSuccess ? Results.Created($"/incidents", result) : Results.BadRequest(result);
+            ApiResponse result = await incidentService.AddAsync(incidentRequest, Guid.NewGuid());
+            return Results.Ok(result);
         });
     }
 }

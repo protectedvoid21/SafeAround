@@ -25,7 +25,7 @@ import com.example.safearound.helpers.getIconForCategory
 data class DropdownItem(val id: Int, val name: String, val icon: String? = null)
 
 @Composable
-fun DropdownInput(options: List<DropdownItem>, onItemSelected: (DropdownItem) -> Unit) {
+fun DropdownInput(options: List<DropdownItem>, label: String, onItemSelected: (DropdownItem) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
     val textFieldState = rememberTextFieldState("")
 
@@ -36,7 +36,7 @@ fun DropdownInput(options: List<DropdownItem>, onItemSelected: (DropdownItem) ->
         TextField(
             value = textFieldState.text.toString(),
             modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable),
-            label = { Text("Label") },
+            label = { Text(label) },
             onValueChange = {
                 textFieldState.setTextAndPlaceCursorAtEnd(it)
             },

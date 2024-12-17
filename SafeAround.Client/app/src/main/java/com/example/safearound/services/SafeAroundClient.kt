@@ -3,8 +3,6 @@ package com.example.safearound.services
 import com.example.safearound.models.AddIncidentRequest
 import com.example.safearound.models.Category
 import com.example.safearound.models.Incident
-import com.example.safearound.viewmodels.IncidentViewModel
-import com.google.android.gms.maps.model.LatLng
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.request.get
@@ -12,6 +10,8 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -37,17 +37,21 @@ class SafeAroundClient {
         return json.decodeFromString<List<Category>>(content)
     }
 
-    suspend fun addIncident(incidentViewModel: IncidentViewModel, latLng: LatLng) {
+    suspend fun addIncident(request: AddIncidentRequest) {
         val response = client.post("$BASE_URL/incidents") {
+            contentType(ContentType.Application.Json)
             setBody(json.encodeToString(
                 AddIncidentRequest(
-                    incidentViewModel.title,
-                    incidentViewModel.description,
-                    incidentViewModel.categoryId,
-                    latLng.latitude,
-                    latLng.longitude
+                    request.title,
+                    request.description,
+                    request.categoryId,
+                    request.latitude,
+                    request.longitude
                 )
             ))
         }
+
+        val content = response.bodyAsText()
+        return json.decodeFromString(content)
     }
 }

@@ -1,6 +1,7 @@
 using FluentResults;
 using Microsoft.EntityFrameworkCore;
 using SafeAround.Api.Dto;
+using SafeAround.Api.Models;
 using SafeAround.Api.Persistence;
 using SafeAround.Api.Persistence.Entities;
 
@@ -50,7 +51,7 @@ public class IncidentService
         }).ToListAsync();
     }
 
-    public async Task<Result> AddAsync(AddIncidentRequest request, Guid userId)
+    public async Task<ApiResponse> AddAsync(AddIncidentRequest request, Guid userId)
     {
         //TODO: Remove this line when authentication is implemented
         userId = _dbContext.Users.First().Id;
@@ -58,7 +59,7 @@ public class IncidentService
         bool categoryExists = await _dbContext.IncidentCategories.AnyAsync(c => c.Id == request.CategoryId);
         if(!categoryExists)
         {
-            return Result.Fail("Category not found");
+            return ApiResponse.Fail("Category not found");
         }
         
         var incident = new Incident
@@ -74,6 +75,6 @@ public class IncidentService
         _dbContext.Add(incident);
         await _dbContext.SaveChangesAsync();
 
-        return Result.Ok();
+        return ApiResponse.Success("Incident added successfully");
     }
 }

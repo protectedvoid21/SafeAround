@@ -28,6 +28,7 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.rememberMarkerState
 import kotlinx.coroutines.launch
 
 @Composable
@@ -51,25 +52,20 @@ fun Map(mapViewModel: MapViewModel) {
     val cameraPositionState = rememberCameraPositionState()
     val context: Context = LocalContext.current
 
-    var incidents by remember {
-        mutableStateOf(emptyList<Incident>())
-    }
-
-    var createNewIncidentMarker by remember {
-        mutableStateOf<LatLng?>(null)
-    }
+    var incidents by remember { mutableStateOf(emptyList<Incident>()) }
+    var createNewIncidentMarker by remember { mutableStateOf<LatLng?>(null) }
 
     GoogleMap(
         cameraPositionState = cameraPositionState,
         properties = properties,
         uiSettings = uiSettings,
         onMapLongClick = { latLng ->
+            createNewIncidentMarker = latLng
             scope.launch {
                 cameraPositionState.animate(
                     CameraUpdateFactory.newLatLngZoom(latLng, 18f)
                 )
             }
-            createNewIncidentMarker = latLng
         }
     ) {
         InitMap(mapViewModel, context, cameraPositionState)
@@ -89,6 +85,13 @@ fun Map(mapViewModel: MapViewModel) {
         }
 
         if(createNewIncidentMarker != null) {
+            Marker(
+                state = rememberMarkerState(
+                    position = createNewIncidentMarker!!
+                ),
+                title = "Nowe zgłoszenie",
+                snippet = "Kliknij aby dodać zgłoszenie"
+            )
             IncidentCreator(
                 createNewIncidentMarker,
                 onDismiss = { createNewIncidentMarker = null }

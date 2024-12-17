@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.safearound.viewmodels.IncidentViewModel
 import com.google.android.gms.maps.model.LatLng
 
@@ -31,12 +32,15 @@ fun IncidentCreator(createLatLng: LatLng?, onDismiss: () -> Unit) {
     val sheetState = rememberModalBottomSheetState()
 
     LaunchedEffect(createLatLng) {
-        createLatLng?.let {
+        if (createLatLng != null) {
             sheetState.show()
+        }
+        else {
+            sheetState.hide()
         }
     }
 
-    if (createLatLng != null) {
+    createLatLng?.let {
         ModalBottomSheet(
             sheetState = sheetState,
             onDismissRequest = {
@@ -48,14 +52,14 @@ fun IncidentCreator(createLatLng: LatLng?, onDismiss: () -> Unit) {
                 contentAlignment = Alignment.Center,
                 modifier = Modifier.fillMaxWidth()
             ){
-                IncidentForm()
+                IncidentForm(createLatLng)
             }
         }
     }
 }
 
 @Composable
-fun IncidentForm(incidentViewModel: IncidentViewModel = IncidentViewModel()) {
+fun IncidentForm(latLng: LatLng, incidentViewModel: IncidentViewModel = viewModel()) {
     var expanded by remember { mutableStateOf(false) }
 
     Column(
@@ -65,7 +69,7 @@ fun IncidentForm(incidentViewModel: IncidentViewModel = IncidentViewModel()) {
         TextField(
             value = incidentViewModel.title,
             onValueChange = { incidentViewModel.onTitleChange(it) },
-            label = { Text("Tytuł") }
+            label = { Text("Tytuł") },
         )
         TextField(
             value = incidentViewModel.description,
@@ -75,8 +79,11 @@ fun IncidentForm(incidentViewModel: IncidentViewModel = IncidentViewModel()) {
         )
         DropdownInput(
             incidentViewModel.categoriesDropdown.value,
+            "Rodzaj zdarzenia",
             onItemSelected = { incidentViewModel.onCategoryChange(it.id) })
-        Button(onClick = { }) {
+        Button(onClick = {
+            incidentViewModel.send(latLng)
+        }) {
             Text("Wyślij")
         }
     }
@@ -95,7 +102,7 @@ fun IncidentCreatorPreview() {
         sheetState = sheetState,
         onDismissRequest = {},
     ) {
-        IncidentForm()
+        IncidentForm(LatLng(0.0, 0.0))
     }
 }
 

@@ -8,7 +8,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.safearound.components.DropdownItem
+import com.example.safearound.models.AddIncidentRequest
 import com.example.safearound.services.SafeAroundClient
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
 
 class IncidentViewModel : ViewModel() {
@@ -33,9 +35,9 @@ class IncidentViewModel : ViewModel() {
         }
     }
 
-    public fun send() {
+    public fun send(latLng: LatLng) {
         viewModelScope.launch {
-            SafeAroundClient().add(title, description, categoryId)
+            SafeAroundClient().addIncident(AddIncidentRequest(title, description, categoryId, latLng.latitude, latLng.longitude))
         }
     }
 
