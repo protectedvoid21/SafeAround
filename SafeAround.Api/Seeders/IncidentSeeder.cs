@@ -1,6 +1,6 @@
 using Bogus;
 using SafeAround.Api.Persistence;
-using SafeAround.Api.Persistence.Models;
+using SafeAround.Api.Persistence.Entities;
 
 namespace SafeAround.Api.Seeders;
 
@@ -33,7 +33,6 @@ public class IncidentSeeder : ISeeder
         var exampleTitles = LoadExampleTitles();
 
         var faker = new Faker<Incident>()
-            .RuleFor(p => p.OccurrenceDate, f => f.Date.Past().AddDays(-5))
             .RuleFor(p => p.Description, f => f.Lorem.Sentence())
             .RuleFor(p => p.Longitude, f => (float)f.Address.Longitude(16.8d, 17.2d))
             .RuleFor(p => p.Latitude, f => (float)f.Address.Latitude(51d, 51.19d))

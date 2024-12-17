@@ -1,5 +1,5 @@
 using SafeAround.Api.Persistence;
-using SafeAround.Api.Persistence.Models;
+using SafeAround.Api.Persistence.Entities;
 
 namespace SafeAround.Api.Seeders;
 

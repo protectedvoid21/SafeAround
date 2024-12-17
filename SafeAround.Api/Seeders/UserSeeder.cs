@@ -1,6 +1,6 @@
 using Bogus;
 using Microsoft.AspNetCore.Identity;
-using SafeAround.Api.Persistence.Models;
+using SafeAround.Api.Persistence.Entities;
 
 namespace SafeAround.Api.Seeders;
 

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using SafeAround.Api.Persistence.Models;
+using SafeAround.Api.Persistence.Entities;
 
 namespace SafeAround.Api.Persistence;
 

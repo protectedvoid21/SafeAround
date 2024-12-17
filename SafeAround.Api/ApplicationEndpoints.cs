@@ -6,7 +6,8 @@ public static class ApplicationEndpoints
 {
     private static readonly IEndpointMap[] Endpoints =
     [
-        new IncidentApi()
+        new IncidentApi(),
+        new CategoryApi()
     ];
     
     public static void MapEndpoints(this IEndpointRouteBuilder routes)

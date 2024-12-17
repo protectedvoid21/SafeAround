@@ -8,6 +8,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.Text
@@ -18,12 +19,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import com.example.safearound.helpers.getIconForCategory
+
+data class DropdownItem(val id: Int, val name: String, val icon: String? = null)
 
 @Composable
-fun DropdownInput() {
-    val options: List<String> = listOf("Option 1", "Option 2", "Option 3")
+fun DropdownInput(options: List<DropdownItem>, onItemSelected: (DropdownItem) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
-    val textFieldState = rememberTextFieldState(options[0])
+    val textFieldState = rememberTextFieldState("")
 
     ExposedDropdownMenuBox(
         expanded = expanded,
@@ -38,7 +42,9 @@ fun DropdownInput() {
             },
             readOnly = true,
             singleLine = true,
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+            },
             colors = ExposedDropdownMenuDefaults.textFieldColors(),
         )
         ExposedDropdownMenu(
@@ -47,10 +53,20 @@ fun DropdownInput() {
         ) {
             options.forEach { option ->
                 DropdownMenuItem(
-                    text = { Text(option, style = MaterialTheme.typography.bodyLarge) },
+                    text = { Text(option.name, style = MaterialTheme.typography.bodyLarge) },
+                    trailingIcon = {
+                        if (option.icon != null) {
+                            Icon(
+                                painter = painterResource(getIconForCategory(option.icon)),
+                                tint = MaterialTheme.colorScheme.onSurface,
+                                contentDescription = null,
+                            )
+                        }
+                    },
                     onClick = {
-                        textFieldState.setTextAndPlaceCursorAtEnd(option)
+                        textFieldState.setTextAndPlaceCursorAtEnd(option.name)
                         expanded = false
+                        onItemSelected(option)
                     },
                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
                 )

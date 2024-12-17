@@ -2,7 +2,7 @@ using FluentResults;
 using Microsoft.EntityFrameworkCore;
 using SafeAround.Api.Dto;
 using SafeAround.Api.Persistence;
-using SafeAround.Api.Persistence.Models;
+using SafeAround.Api.Persistence.Entities;
 
 namespace SafeAround.Api.Services;
 
@@ -25,7 +25,7 @@ public class IncidentService
                 Description = i.Description,
                 Latitude = i.Latitude,
                 Longitude = i.Longitude,
-                OccurrenceDate = i.OccurrenceDate,
+                OccurrenceDate = i.CreatedOn,
                 CategoryId = i.CategoryId,
                 CategoryName = i.Category.Name,
                 CategoryCode = i.Category.Code,
@@ -42,7 +42,7 @@ public class IncidentService
             Description = i.Description,
             Latitude = i.Latitude,
             Longitude = i.Longitude,
-            OccurrenceDate = i.OccurrenceDate,
+            OccurrenceDate = i.CreatedOn,
             CategoryId = i.CategoryId,
             CategoryName = i.Category.Name,
             CategoryCode = i.Category.Code,
@@ -52,13 +52,21 @@ public class IncidentService
 
     public async Task<Result> AddAsync(AddIncidentRequest request, Guid userId)
     {
+        //TODO: Remove this line when authentication is implemented
+        userId = _dbContext.Users.First().Id;
+        
+        bool categoryExists = await _dbContext.IncidentCategories.AnyAsync(c => c.Id == request.CategoryId);
+        if(!categoryExists)
+        {
+            return Result.Fail("Category not found");
+        }
+        
         var incident = new Incident
         {
             Title = request.Title,
             Description = request.Description,
             Latitude = request.Latitude,
             Longitude = request.Longitude,
-            OccurrenceDate = request.Date,
             UserId = userId,
             CategoryId = request.CategoryId
         };

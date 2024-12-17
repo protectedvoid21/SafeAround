@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SafeAround.Api;
 using SafeAround.Api.Persistence;
-using SafeAround.Api.Persistence.Models;
+using SafeAround.Api.Persistence.Entities;
 using SafeAround.Api.Seeders;
 using SafeAround.Api.Services;
 using Serilog;

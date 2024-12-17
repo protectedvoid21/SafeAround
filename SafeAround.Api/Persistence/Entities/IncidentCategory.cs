@@ -1,4 +1,4 @@
-namespace SafeAround.Api.Persistence.Models;
+namespace SafeAround.Api.Persistence.Entities;
 
 public class IncidentCategory : BaseEntity
 {
