@@ -35,9 +35,23 @@ class IncidentViewModel : ViewModel() {
         }
     }
 
-    public fun send(latLng: LatLng) {
+    public fun send(latLng: LatLng, onSuccess: () -> Unit, onError: (String) -> Unit) {
         viewModelScope.launch {
-            SafeAroundClient().addIncident(AddIncidentRequest(title, description, categoryId, latLng.latitude, latLng.longitude))
+            var response = SafeAroundClient().addIncident(
+                AddIncidentRequest(
+                    title,
+                    description,
+                    categoryId,
+                    latLng.latitude,
+                    latLng.longitude
+                )
+            )
+
+            if (response.isSuccess) {
+                onSuccess()
+            } else {
+                onError(response.message)
+            }
         }
     }
 

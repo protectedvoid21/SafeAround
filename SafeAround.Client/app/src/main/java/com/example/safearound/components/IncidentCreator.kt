@@ -28,7 +28,12 @@ import com.example.safearound.viewmodels.IncidentViewModel
 import com.google.android.gms.maps.model.LatLng
 
 @Composable
-fun IncidentCreator(createLatLng: LatLng?, onDismiss: () -> Unit) {
+fun IncidentCreator(
+    createLatLng: LatLng?,
+    onDismiss: () -> Unit,
+    onSuccess: () -> Unit,
+    onError: (message: String) -> Unit
+) {
     val sheetState = rememberModalBottomSheetState()
 
     LaunchedEffect(createLatLng) {
@@ -52,18 +57,25 @@ fun IncidentCreator(createLatLng: LatLng?, onDismiss: () -> Unit) {
                 contentAlignment = Alignment.Center,
                 modifier = Modifier.fillMaxWidth()
             ){
-                IncidentForm(createLatLng)
+                IncidentForm(createLatLng, onSuccess, onError)
             }
         }
     }
 }
 
 @Composable
-fun IncidentForm(latLng: LatLng, incidentViewModel: IncidentViewModel = viewModel()) {
+fun IncidentForm(
+    latLng: LatLng,
+    onSuccess: () -> Unit,
+    onError: (message: String) -> Unit,
+    incidentViewModel: IncidentViewModel = viewModel()
+) {
     var expanded by remember { mutableStateOf(false) }
 
     Column(
-        modifier = Modifier.padding(16.dp).fillMaxWidth(),
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         TextField(
@@ -82,7 +94,7 @@ fun IncidentForm(latLng: LatLng, incidentViewModel: IncidentViewModel = viewMode
             "Rodzaj zdarzenia",
             onItemSelected = { incidentViewModel.onCategoryChange(it.id) })
         Button(onClick = {
-            incidentViewModel.send(latLng)
+            incidentViewModel.send(latLng, onSuccess, onError)
         }) {
             Text("Wyślij")
         }
@@ -102,7 +114,7 @@ fun IncidentCreatorPreview() {
         sheetState = sheetState,
         onDismissRequest = {},
     ) {
-        IncidentForm(LatLng(0.0, 0.0))
+        IncidentForm(LatLng(0.0, 0.0), {}, {})
     }
 }
 

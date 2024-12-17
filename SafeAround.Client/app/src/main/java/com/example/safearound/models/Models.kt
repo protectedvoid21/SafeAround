@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 open class ApiResponse {
-    val success: Boolean = false
+    val isSuccess: Boolean = false
     val message: String = ""
 }
 

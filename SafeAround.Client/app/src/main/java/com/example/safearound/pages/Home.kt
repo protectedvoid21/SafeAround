@@ -6,11 +6,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.example.safearound.components.IncidentSheet
-import com.example.safearound.viewmodels.MapViewModel
 import com.example.safearound.components.Map
+import com.example.safearound.viewmodels.MapViewModel
 
 @Composable
-fun Home(mapViewModel: MapViewModel) {
+fun Home(mapViewModel: MapViewModel, onError: (String) -> Unit) {
     val clickedIncident by mapViewModel.clickedIncident
 
     Box(Modifier.fillMaxSize()) {
@@ -20,6 +20,6 @@ fun Home(mapViewModel: MapViewModel) {
                 mapViewModel.onMarkerClicked(null)
             }
         )
-        Map(mapViewModel)
+        Map(mapViewModel, onError)
     }
 }

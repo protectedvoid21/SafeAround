@@ -18,11 +18,16 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarData
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,9 +55,20 @@ class MainActivity : ComponentActivity() {
 
                 val drawerState = rememberDrawerState(DrawerValue.Closed)
                 val scope = rememberCoroutineScope()
+                val snackbarHostState = remember { SnackbarHostState() }
+
+                val displayErrorSnackbar: (String) -> Unit = { message ->
+                    scope.launch {
+                        snackbarHostState.showSnackbar(message)
+                    }
+                }
 
                 DrawerMenu(navController, drawerState) {
+
                     Scaffold(
+                        snackbarHost = {
+                            SnackbarHost(hostState = snackbarHostState)
+                        },
                         topBar = {
                             TopAppBar(
                                 navigationIcon = {
@@ -69,17 +85,9 @@ class MainActivity : ComponentActivity() {
                                 },
                             )
                         },
-                        floatingActionButton = {
-                            Button(
-                                onClick = { },
-                                modifier = Modifier.clip(RoundedCornerShape(200.dp))
-                            ) {
-                                Icon(imageVector = Icons.Filled.Add, contentDescription = "Add")
-                            }
-                        },
                     ) { _ ->
                         NavHost(navController = navController, startDestination = "home") {
-                            composable("home") { Home(MapViewModel()) }
+                            composable("home") { Home(MapViewModel(), displayErrorSnackbar) }
                             composable("reports") { Reports() }
                         }
                     }

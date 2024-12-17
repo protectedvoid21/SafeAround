@@ -32,7 +32,7 @@ import com.google.maps.android.compose.rememberMarkerState
 import kotlinx.coroutines.launch
 
 @Composable
-fun Map(mapViewModel: MapViewModel) {
+fun Map(mapViewModel: MapViewModel, onError: (String) -> Unit) {
     val uiSettings by remember {
         mutableStateOf(
             MapUiSettings(
@@ -94,7 +94,14 @@ fun Map(mapViewModel: MapViewModel) {
             )
             IncidentCreator(
                 createNewIncidentMarker,
-                onDismiss = { createNewIncidentMarker = null }
+                onDismiss = { createNewIncidentMarker = null },
+                onSuccess = {
+                    createNewIncidentMarker = null
+                    scope.launch {
+                        incidents = client.getIncidents()
+                    }
+                },
+                onError = onError
             )
         }
     }

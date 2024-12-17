@@ -1,6 +1,7 @@
 package com.example.safearound.services
 
 import com.example.safearound.models.AddIncidentRequest
+import com.example.safearound.models.ApiResponse
 import com.example.safearound.models.Category
 import com.example.safearound.models.Incident
 import io.ktor.client.HttpClient
@@ -24,21 +25,21 @@ class SafeAroundClient {
     }
 
     suspend fun getIncidents(): List<Incident> {
-        val response: HttpResponse = client.get("$BASE_URL/incidents")
+        val response: HttpResponse = client.get("$BASE_URL/incident")
         val content = response.bodyAsText()
 
         return json.decodeFromString<List<Incident>>(content)
     }
 
     suspend fun getCategories(): List<Category> {
-        val response: HttpResponse = client.get("$BASE_URL/categories")
+        val response: HttpResponse = client.get("$BASE_URL/category")
         val content = response.bodyAsText()
 
         return json.decodeFromString<List<Category>>(content)
     }
 
-    suspend fun addIncident(request: AddIncidentRequest) {
-        val response = client.post("$BASE_URL/incidents") {
+    suspend fun addIncident(request: AddIncidentRequest): ApiResponse {
+        val response = client.post("$BASE_URL/incident") {
             contentType(ContentType.Application.Json)
             setBody(json.encodeToString(
                 AddIncidentRequest(
@@ -52,6 +53,6 @@ class SafeAroundClient {
         }
 
         val content = response.bodyAsText()
-        return json.decodeFromString(content)
+        return json.decodeFromString<ApiResponse>(content)
     }
 }
