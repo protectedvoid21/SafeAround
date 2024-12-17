@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
 using SafeAround.Api;
+using SafeAround.Api.Helpers;
 using SafeAround.Api.Persistence;
 using SafeAround.Api.Persistence.Entities;
 using SafeAround.Api.Seeders;
@@ -13,6 +15,10 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddControllers(options =>
+{
+    options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
+});
 
 builder.Services.AddSerilog(config =>
 {
@@ -58,7 +64,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapEndpoints();
+app.MapControllers();
 
 app.UseAuthentication();
 app.UseAuthorization();
