@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
 using SafeAround.Api;
@@ -57,6 +58,8 @@ builder.Services
     .AddScoped<Seeder>();
 
 var app = builder.Build();
+
+app.Map("/", () => Results.Redirect("/swagger"));
 
 if (app.Environment.IsDevelopment())
 {

@@ -36,4 +36,11 @@ public class IncidentController : ControllerBase
         ApiResponse result = await _incidentService.AddAsync(incidentRequest, Guid.NewGuid());
         return Ok(result);
     }
+    
+    [HttpGet("around")]
+    public async Task<IActionResult> GetAround([FromQuery] GetIncidentsAroundRequest request)
+    {
+        var incidents = await _incidentService.GetIncidentsAroundAsync(request);
+        return Ok(incidents);
+    }
 }

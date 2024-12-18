@@ -18,13 +18,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarData
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
+import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -38,7 +37,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.safearound.components.DrawerMenu
 import com.example.safearound.pages.Home
-import com.example.safearound.pages.Reports
+import com.example.safearound.pages.Incidents
 import com.example.safearound.ui.theme.SafeAroundTheme
 import com.example.safearound.viewmodels.MapViewModel
 import kotlinx.coroutines.launch
@@ -50,7 +49,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            SafeAroundTheme {
+            SafeAroundTheme(
+                darkTheme = false
+            ) {
                 val navController = rememberNavController()
 
                 val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -88,26 +89,11 @@ class MainActivity : ComponentActivity() {
                     ) { _ ->
                         NavHost(navController = navController, startDestination = "home") {
                             composable("home") { Home(MapViewModel(), displayErrorSnackbar) }
-                            composable("reports") { Reports() }
+                            composable("incidents") { Incidents() }
                         }
                     }
                 }
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun RoundedButtonPreview() {
-    OutlinedButton(onClick = {},
-        modifier = Modifier.clip(RoundedCornerShape(200.dp))) { }
-    Button(
-        onClick = { },
-        shape = CircleShape,
-    ) {
-        Icon(imageVector = Icons.Filled.Add, contentDescription = "Add",
-            modifier = Modifier.padding(100.dp)
-        )
     }
 }

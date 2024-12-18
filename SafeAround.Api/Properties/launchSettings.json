@@ -19,7 +19,17 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "https": {
+    "https - hotspot": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "launchUrl": "swagger",
+      "applicationUrl": "https://0.0.0.0:7178;http://192.168.43.80:5178",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "https - local": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,
