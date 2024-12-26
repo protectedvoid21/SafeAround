@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using SafeAround.Api.Helpers;
 using SafeAround.Api.Persistence.Entities;
 
 namespace SafeAround.Api.Persistence;
@@ -43,5 +44,11 @@ public class SafeAroundDbContext : IdentityDbContext<AppUser, IdentityRole<Guid>
         UpdateBaseTrackingEntities();
 
         return base.SaveChangesAsync(cancellationToken);
+    }
+    
+    [DbFunction("distance_between_points", "public")]
+    public float DistanceBetweenPoints(double lat1, double lon1, double lat2, double lon2)
+    {
+        throw new NotImplementedException();
     }
 }

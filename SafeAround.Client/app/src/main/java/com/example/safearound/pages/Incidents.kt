@@ -3,8 +3,11 @@ package com.example.safearound.pages
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -27,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.safearound.helpers.distanceToString
 import com.example.safearound.helpers.getIconForCategory
 import com.example.safearound.models.Incident
 import com.example.safearound.services.SafeAroundClient
@@ -55,19 +59,29 @@ fun IncidentsList(incidents: List<Incident>) {
                 )
                 .padding(16.dp)
                 .fillMaxWidth()
+                .height(IntrinsicSize.Max)
         ) {
-            Icon(
-                painter = painterResource(getIconForCategory(incident.categoryCode)),
-                contentDescription = "Incident icon",
-                modifier = Modifier
-                    .size(48.dp)
-                    .align(Alignment.CenterVertically),
-            )
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier.fillMaxHeight()
+            ) {
+                Icon(
+                    painter = painterResource(getIconForCategory(incident.categoryCode)),
+                    contentDescription = "Incident icon",
+                    modifier = Modifier
+                        .size(48.dp)
+                )
+                Text(
+                    distanceToString(incident.distanceInKm),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                )
+            }
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.padding(8.dp)
             ) {
-
                 Text(
                     incident.categoryName,
                     fontSize = 20.sp,
@@ -115,6 +129,7 @@ fun IncidentListPreview() {
         categoryCode = "CAR_ACCIDENT",
         occurrenceDate = LocalDateTime(2024, 11, 21, 12, 43, 50),
         userId = "asdkpoaskdopk1opk2o",
+        distanceInKm = 2.532
     )
 
     val exampleIncidents = List(10) { exampleIncident }

@@ -14,4 +14,5 @@ public class GetIncidentResponse
     public required string CategoryCode { get; set; }
     
     public required Guid UserId { get; set; }
+    public required float? DistanceInKm { get; set; }
 }

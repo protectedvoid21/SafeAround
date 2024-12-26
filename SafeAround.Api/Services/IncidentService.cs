@@ -16,7 +16,7 @@ public class IncidentService
     {
         _dbContext = dbContext;
     }
-    
+
     public async Task<GetIncidentResponse?> GetByIdAsync(int id)
     {
         return await _dbContext.Incidents
@@ -31,10 +31,11 @@ public class IncidentService
                 CategoryId = i.CategoryId,
                 CategoryName = i.Category.Name,
                 CategoryCode = i.Category.Code,
-                UserId = i.User.Id
+                UserId = i.User.Id,
+                DistanceInKm = null
             }).FirstOrDefaultAsync();
     }
-    
+
     public async Task<List<GetIncidentResponse>> GetAllAsync()
     {
         return await _dbContext.Incidents.Select(i => new GetIncidentResponse
@@ -48,7 +49,8 @@ public class IncidentService
             CategoryId = i.CategoryId,
             CategoryName = i.Category.Name,
             CategoryCode = i.Category.Code,
-            UserId = i.User.Id
+            UserId = i.User.Id,
+            DistanceInKm = null
         }).ToListAsync();
     }
 
@@ -56,13 +58,13 @@ public class IncidentService
     {
         //TODO: Remove this line when authentication is implemented
         userId = _dbContext.Users.First().Id;
-        
+
         bool categoryExists = await _dbContext.IncidentCategories.AnyAsync(c => c.Id == request.CategoryId);
-        if(!categoryExists)
+        if (!categoryExists)
         {
             return ApiResponse.Fail("Category not found");
         }
-        
+
         var incident = new Incident
         {
             Title = request.Title,
@@ -78,19 +80,18 @@ public class IncidentService
 
         return ApiResponse.Success("Incident added successfully");
     }
-    
+
     public async Task<ApiResponse<List<GetIncidentResponse>>> GetIncidentsAroundAsync(GetIncidentsAroundRequest request)
     {
         var requestPoint = new Point(request.Latitude, request.Longitude);
         var radiusInKm = request.RadiusUnit switch
         {
-            RadiusUnit.Miles => request.Radius * 1.60934,
+            RadiusUnit.Miles => request.Radius * Constants.KilometersInMile,
             RadiusUnit.Kilometers => request.Radius,
             _ => throw new ArgumentOutOfRangeException()
         };
-        
+
         var incidents = await _dbContext.Incidents
-            .Where(i => GeoCalculator.HaversineDistance(requestPoint, new Point(i.Latitude, i.Longitude)) <= radiusInKm)
             .Select(i => new GetIncidentResponse
             {
                 Id = i.Id,
@@ -102,8 +103,17 @@ public class IncidentService
                 CategoryId = i.CategoryId,
                 CategoryName = i.Category.Name,
                 CategoryCode = i.Category.Code,
-                UserId = i.User.Id
-            }).ToListAsync();
+                UserId = i.User.Id,
+                DistanceInKm = _dbContext.DistanceBetweenPoints(requestPoint.Latitude, requestPoint.Longitude, i.Latitude, i.Longitude) / 1000,
+            })
+            .Where(i => i.DistanceInKm <= radiusInKm)
+            .OrderBy(i => i.DistanceInKm)
+            .ToListAsync();
+
+        foreach (var incident in incidents)
+        {
+            incident.DistanceInKm = (float)Math.Round(incident.DistanceInKm!.Value, 3, MidpointRounding.AwayFromZero);
+        }
 
         return ApiResponse<List<GetIncidentResponse>>.Success(incidents);
     }

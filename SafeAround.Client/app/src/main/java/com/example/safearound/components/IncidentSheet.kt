@@ -76,6 +76,7 @@ fun IncidentSheetPreview() {
             categoryCode = "CAR_ACCIDENT",
             occurrenceDate = LocalDateTime(2024, 11, 21, 12, 43, 50),
             userId = "asdkpoaskdopk1opk2o",
+            distanceInKm = 0.532
         ),
         onDismiss = {}
     )
