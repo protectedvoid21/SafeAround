@@ -4,9 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.Menu
@@ -82,7 +79,7 @@ class MainActivity : ComponentActivity() {
                             )
                         },
                     ) { _ ->
-                        NavHost(navController = navController, startDestination = "incidents") {
+                        NavHost(navController = navController, startDestination = "home") {
                             composable("home") { Home(MapViewModel(), UserLocationViewModel(), displayErrorSnackbar) }
                             composable("incidents") { Incidents(modifier = Modifier.padding(16.dp, 120.dp, 16.dp, 16.dp)) }
                         }
