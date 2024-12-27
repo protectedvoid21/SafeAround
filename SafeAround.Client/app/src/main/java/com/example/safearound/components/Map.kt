@@ -124,7 +124,7 @@ fun InitMap(locationViewModel: UserLocationViewModel, context: Context, cameraPo
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-            locationViewModel.getUserLocation(context)
+            locationViewModel.fetchUserLocation(context)
         }
     }
 
@@ -134,7 +134,7 @@ fun InitMap(locationViewModel: UserLocationViewModel, context: Context, cameraPo
                 context,
                 android.Manifest.permission.ACCESS_FINE_LOCATION
             ) -> {
-                locationViewModel.getUserLocation(context)
+                locationViewModel.fetchUserLocation(context)
             }
 
             else -> {

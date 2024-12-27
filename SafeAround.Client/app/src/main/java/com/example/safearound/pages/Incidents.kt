@@ -51,16 +51,12 @@ fun Incidents(locationViewModel: UserLocationViewModel = viewModel()) {
 
     LaunchedEffect(locationViewModel.userLocation.value, radius) {
         Log.d("User debugging", "Launched effect")
-        val location = locationViewModel.getUserLocation(context)
-
         Log.d("User debugging", "Location: ${locationViewModel.userLocation.value == null}")
-        if (locationViewModel.userLocation.value == null) {
-            return@LaunchedEffect
-        }
-        location.let {
+        locationViewModel.fetchUserLocation(context)
+        locationViewModel.userLocation.value?.let {
             incidents = SafeAroundClient().getIncidents(
-                latitude = locationViewModel.userLocation.value!!.latitude,
-                longitude = locationViewModel.userLocation.value!!.longitude,
+                latitude = it.latitude,
+                longitude = it.longitude,
                 radius = radius
             )
         }

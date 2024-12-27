@@ -14,7 +14,7 @@ class UserLocationViewModel : ViewModel() {
     private val _userLocation = mutableStateOf<LatLng?>(null)
     val userLocation: State<LatLng?> = _userLocation
 
-    fun getUserLocation(context: Context) {
+    fun fetchUserLocation(context: Context) {
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
         val isPermissionGranted = ContextCompat.checkSelfPermission(context, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
 
