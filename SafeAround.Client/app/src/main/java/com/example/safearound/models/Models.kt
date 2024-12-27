@@ -26,7 +26,7 @@ data class Incident (
     val categoryCode: String,
     val occurrenceDate: LocalDateTime,
     val userId: String,
-    val distanceInKm: Double,
+    val distanceInKm: Double?,
 )
 
 @Serializable

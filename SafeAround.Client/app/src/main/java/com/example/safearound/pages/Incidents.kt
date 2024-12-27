@@ -1,5 +1,7 @@
 package com.example.safearound.pages
 
+import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -25,30 +28,50 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.safearound.components.RadiusDropdown
 import com.example.safearound.helpers.distanceToString
 import com.example.safearound.helpers.getIconForCategory
 import com.example.safearound.models.Incident
+import com.example.safearound.modules.UserLocationViewModel
 import com.example.safearound.services.SafeAroundClient
 import kotlinx.datetime.LocalDateTime
 
 @Composable
-fun Incidents() {
+fun Incidents(locationViewModel: UserLocationViewModel = viewModel()) {
     var incidents by remember { mutableStateOf(listOf<Incident>()) }
+    var radius by remember { mutableIntStateOf(5) }
+    val context: Context = LocalContext.current
 
-    LaunchedEffect(Unit) {
-        incidents = SafeAroundClient().getIncidents()
+    LaunchedEffect(locationViewModel.userLocation.value, radius) {
+        Log.d("User debugging", "Launched effect")
+        val location = locationViewModel.getUserLocation(context)
+
+        Log.d("User debugging", "Location: ${locationViewModel.userLocation.value == null}")
+        if (locationViewModel.userLocation.value == null) {
+            return@LaunchedEffect
+        }
+        location.let {
+            incidents = SafeAroundClient().getIncidents(
+                latitude = locationViewModel.userLocation.value!!.latitude,
+                longitude = locationViewModel.userLocation.value!!.longitude,
+                radius = radius
+            )
+        }
     }
 
-    IncidentsList(incidents)
+    IncidentsList(incidents, onRadiusChanged = { radius = it; Log.d("User debugging", "Radius changed to $it") })
 }
 
 @Composable
-fun IncidentsList(incidents: List<Incident>) {
+fun IncidentsList(incidents: List<Incident>, onRadiusChanged: (radius: Int) -> Unit) {
+    Log.d("User debugging", "Incidents have ${incidents.size} elements")
     @Composable
     fun IncidentItem(incident: Incident) {
         Row(
@@ -73,7 +96,7 @@ fun IncidentsList(incidents: List<Incident>) {
                         .size(48.dp)
                 )
                 Text(
-                    distanceToString(incident.distanceInKm),
+                    distanceToString(incident.distanceInKm!!),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                 )
@@ -109,6 +132,7 @@ fun IncidentsList(incidents: List<Incident>) {
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(16.dp)
         )
+        RadiusDropdown(onRadiusChanged = onRadiusChanged)
         incidents.forEach { incident ->
             IncidentItem(incident)
         }
@@ -133,5 +157,5 @@ fun IncidentListPreview() {
     )
 
     val exampleIncidents = List(10) { exampleIncident }
-    IncidentsList(exampleIncidents)
+    IncidentsList(exampleIncidents, onRadiusChanged = {})
 }

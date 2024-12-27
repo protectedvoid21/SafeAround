@@ -86,7 +86,7 @@ fun IncidentForm(
         DropdownInput(
             incidentViewModel.categoriesDropdown.value,
             "Rodzaj zdarzenia",
-            onItemSelected = { incidentViewModel.onCategoryChange(it.id) })
+            onItemSelected = { incidentViewModel.onCategoryChange(it.value) })
         Button(onClick = {
             incidentViewModel.send(latLng, onSuccess, onError)
         }) {

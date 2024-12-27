@@ -1,5 +1,6 @@
 package com.example.safearound.services
 
+import android.util.Log
 import com.example.safearound.models.AddIncidentRequest
 import com.example.safearound.models.ApiResponse
 import com.example.safearound.models.Category
@@ -21,11 +22,12 @@ class SafeAroundClient {
     private val json = Json { ignoreUnknownKeys = true }
 
     companion object {
-        private const val BASE_URL = "http://192.168.0.24:5178"
+        private const val BASE_URL = "http://192.168.31.156:5178"
     }
 
-    suspend fun getIncidents(): List<Incident> {
-        val response: HttpResponse = client.get("$BASE_URL/incident")
+    suspend fun getIncidents(latitude: Double, longitude: Double, radius: Int): List<Incident> {
+        Log.d("User debugging", "Getting incidents for $latitude, $longitude with radius $radius")
+        val response: HttpResponse = client.get("$BASE_URL/incident?latitude=$latitude&longitude=$longitude&radius=$radius")
         val content = response.bodyAsText()
 
         return json.decodeFromString<List<Incident>>(content)

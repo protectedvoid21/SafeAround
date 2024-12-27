@@ -7,10 +7,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.example.safearound.components.IncidentSheet
 import com.example.safearound.components.Map
+import com.example.safearound.modules.UserLocationViewModel
 import com.example.safearound.viewmodels.MapViewModel
 
 @Composable
-fun Home(mapViewModel: MapViewModel, onError: (String) -> Unit) {
+fun Home(mapViewModel: MapViewModel, locationViewModel: UserLocationViewModel, onError: (String) -> Unit) {
     val clickedIncident by mapViewModel.clickedIncident
 
     Box(Modifier.fillMaxSize()) {
@@ -20,6 +21,6 @@ fun Home(mapViewModel: MapViewModel, onError: (String) -> Unit) {
                 mapViewModel.onMarkerClicked(null)
             }
         )
-        Map(mapViewModel, onError)
+        Map(mapViewModel, locationViewModel, onError)
     }
 }

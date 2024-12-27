@@ -34,8 +34,8 @@ public class IncidentSeeder : ISeeder
 
         var faker = new Faker<Incident>()
             .RuleFor(p => p.Description, f => f.Lorem.Sentence())
-            .RuleFor(p => p.Longitude, f => (float)f.Address.Longitude(16.8d, 17.2d))
-            .RuleFor(p => p.Latitude, f => (float)f.Address.Latitude(51d, 51.19d))
+            .RuleFor(p => p.Longitude, f => (float)f.Address.Longitude(22.61d, 23.016d))
+            .RuleFor(p => p.Latitude, f => (float)f.Address.Latitude(49.72d, 49.87d))
             .RuleFor(p => p.CreatedOn, f => f.Date.Recent())
             .RuleFor(p => p.User, f => f.PickRandom(_context.Users.ToList()))
             .RuleFor(p => p.Category, f => f.PickRandom(_context.IncidentCategories.ToList()))

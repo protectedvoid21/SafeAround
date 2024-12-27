@@ -35,25 +35,7 @@ public class IncidentService
                 DistanceInKm = null
             }).FirstOrDefaultAsync();
     }
-
-    public async Task<List<GetIncidentResponse>> GetAllAsync()
-    {
-        return await _dbContext.Incidents.Select(i => new GetIncidentResponse
-        {
-            Id = i.Id,
-            Title = i.Title,
-            Description = i.Description,
-            Latitude = i.Latitude,
-            Longitude = i.Longitude,
-            OccurrenceDate = i.CreatedOn,
-            CategoryId = i.CategoryId,
-            CategoryName = i.Category.Name,
-            CategoryCode = i.Category.Code,
-            UserId = i.User.Id,
-            DistanceInKm = null
-        }).ToListAsync();
-    }
-
+    
     public async Task<ApiResponse> AddAsync(AddIncidentRequest request, Guid userId)
     {
         //TODO: Remove this line when authentication is implemented
@@ -81,13 +63,14 @@ public class IncidentService
         return ApiResponse.Success("Incident added successfully");
     }
 
-    public async Task<ApiResponse<List<GetIncidentResponse>>> GetIncidentsAroundAsync(GetIncidentsAroundRequest request)
+    public async Task<List<GetIncidentResponse>> GetIncidentsAroundAsync(GetIncidentsAroundRequest request)
     {
         var requestPoint = new Point(request.Latitude, request.Longitude);
         var radiusInKm = request.RadiusUnit switch
         {
             RadiusUnit.Miles => request.Radius * Constants.KilometersInMile,
             RadiusUnit.Kilometers => request.Radius,
+            null => request.Radius,
             _ => throw new ArgumentOutOfRangeException()
         };
 
@@ -115,6 +98,6 @@ public class IncidentService
             incident.DistanceInKm = (float)Math.Round(incident.DistanceInKm!.Value, 3, MidpointRounding.AwayFromZero);
         }
 
-        return ApiResponse<List<GetIncidentResponse>>.Success(incidents);
+        return incidents;
     }
 }

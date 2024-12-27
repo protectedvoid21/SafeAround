@@ -14,9 +14,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import com.example.safearound.models.Incident
+import com.example.safearound.modules.UserLocationViewModel
 import com.example.safearound.services.SafeAroundClient
 import com.example.safearound.viewmodels.MapViewModel
-import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -32,7 +32,7 @@ import com.google.maps.android.compose.rememberMarkerState
 import kotlinx.coroutines.launch
 
 @Composable
-fun Map(mapViewModel: MapViewModel, onError: (String) -> Unit) {
+fun Map(mapViewModel: MapViewModel, locationViewModel: UserLocationViewModel, onError: (String) -> Unit) {
     val uiSettings by remember {
         mutableStateOf(
             MapUiSettings(
@@ -68,11 +68,16 @@ fun Map(mapViewModel: MapViewModel, onError: (String) -> Unit) {
             }
         }
     ) {
-        InitMap(mapViewModel, context, cameraPositionState)
+        InitMap(locationViewModel, context, cameraPositionState)
 
-        LaunchedEffect(true) {
+        LaunchedEffect(locationViewModel.userLocation.value) {
+            if (locationViewModel.userLocation.value == null) return@LaunchedEffect
             scope.launch {
-                incidents = client.getIncidents()
+                incidents = client.getIncidents(
+                    latitude = locationViewModel.userLocation.value!!.latitude,
+                    longitude = locationViewModel.userLocation.value!!.longitude,
+                    radius = 25
+                )
             }
         }
 
@@ -98,7 +103,11 @@ fun Map(mapViewModel: MapViewModel, onError: (String) -> Unit) {
                 onSuccess = {
                     createNewIncidentMarker = null
                     scope.launch {
-                        incidents = client.getIncidents()
+                        incidents = client.getIncidents(
+                            latitude = locationViewModel.userLocation.value!!.latitude,
+                            longitude = locationViewModel.userLocation.value!!.longitude,
+                            radius = 25
+                        )
                     }
                 },
                 onError = onError
@@ -108,15 +117,14 @@ fun Map(mapViewModel: MapViewModel, onError: (String) -> Unit) {
 }
 
 @Composable
-fun InitMap(mapViewModel: MapViewModel, context: Context, cameraPositionState: CameraPositionState) {
-    val userLocation by mapViewModel.userLocation
-    val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
+fun InitMap(locationViewModel: UserLocationViewModel, context: Context, cameraPositionState: CameraPositionState) {
+    val userLocation by locationViewModel.userLocation
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-            mapViewModel.fetchUserLocation(context, fusedLocationClient)
+            locationViewModel.getUserLocation(context)
         }
     }
 
@@ -126,7 +134,7 @@ fun InitMap(mapViewModel: MapViewModel, context: Context, cameraPositionState: C
                 context,
                 android.Manifest.permission.ACCESS_FINE_LOCATION
             ) -> {
-                mapViewModel.fetchUserLocation(context, fusedLocationClient)
+                locationViewModel.getUserLocation(context)
             }
 
             else -> {

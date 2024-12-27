@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.example.safearound.helpers.getIconForCategory
 
-data class DropdownItem(val id: Int, val name: String, val icon: String? = null)
+data class DropdownItem(val value: Int, val name: String, val icon: String? = null)
 
 @Composable
 fun DropdownInput(options: List<DropdownItem>, label: String, onItemSelected: (DropdownItem) -> Unit) {

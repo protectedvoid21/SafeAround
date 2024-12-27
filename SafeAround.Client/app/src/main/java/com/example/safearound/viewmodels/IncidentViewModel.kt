@@ -37,7 +37,7 @@ class IncidentViewModel : ViewModel() {
 
     public fun send(latLng: LatLng, onSuccess: () -> Unit, onError: (String) -> Unit) {
         viewModelScope.launch {
-            var response = SafeAroundClient().addIncident(
+            val response = SafeAroundClient().addIncident(
                 AddIncidentRequest(
                     title,
                     description,
