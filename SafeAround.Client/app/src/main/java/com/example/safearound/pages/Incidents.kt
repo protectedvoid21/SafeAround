@@ -1,9 +1,9 @@
 package com.example.safearound.pages
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -44,14 +44,15 @@ import com.example.safearound.services.SafeAroundClient
 import kotlinx.datetime.LocalDateTime
 
 @Composable
-fun Incidents(locationViewModel: UserLocationViewModel = viewModel()) {
+fun Incidents(
+    locationViewModel: UserLocationViewModel = viewModel(),
+    modifier: Modifier = Modifier
+) {
     var incidents by remember { mutableStateOf(listOf<Incident>()) }
     var radius by remember { mutableIntStateOf(5) }
     val context: Context = LocalContext.current
 
     LaunchedEffect(locationViewModel.userLocation.value, radius) {
-        Log.d("User debugging", "Launched effect")
-        Log.d("User debugging", "Location: ${locationViewModel.userLocation.value == null}")
         locationViewModel.fetchUserLocation(context)
         locationViewModel.userLocation.value?.let {
             incidents = SafeAroundClient().getIncidents(
@@ -62,21 +63,22 @@ fun Incidents(locationViewModel: UserLocationViewModel = viewModel()) {
         }
     }
 
-    IncidentsList(incidents, onRadiusChanged = { radius = it; Log.d("User debugging", "Radius changed to $it") })
+    Box(modifier = modifier) {
+        IncidentsList(incidents, onRadiusChanged = { radius = it; })
+    }
 }
 
 @Composable
 fun IncidentsList(incidents: List<Incident>, onRadiusChanged: (radius: Int) -> Unit) {
-    Log.d("User debugging", "Incidents have ${incidents.size} elements")
     @Composable
     fun IncidentItem(incident: Incident) {
         Row(
             modifier = Modifier
-                .clip(shape = RoundedCornerShape(24.dp))
+                .clip(shape = RoundedCornerShape(16.dp))
                 .background(
                     color = Color.hsl(0.0f, 0.0f, 0.9f)
                 )
-                .padding(16.dp)
+                .padding(16.dp, 4.dp)
                 .fillMaxWidth()
                 .height(IntrinsicSize.Max)
         ) {
@@ -115,22 +117,27 @@ fun IncidentsList(incidents: List<Incident>, onRadiusChanged: (radius: Int) -> U
     }
 
     Column(
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(20.dp),
         modifier = Modifier
-            .padding(16.dp)
             .verticalScroll(
                 rememberScrollState(),
             )
     ) {
-        Text(
-            text = "Zgłoszenia",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(16.dp)
-        )
-        RadiusDropdown(onRadiusChanged = onRadiusChanged)
-        incidents.forEach { incident ->
-            IncidentItem(incident)
+        Column {
+            Text(
+                text = "Zgłoszenia",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+            RadiusDropdown(onRadiusChanged = onRadiusChanged)
+        }
+        Column(
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            incidents.forEach { incident ->
+                IncidentItem(incident)
+            }
         }
     }
 }

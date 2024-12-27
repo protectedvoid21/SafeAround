@@ -4,6 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.sharp.Menu
 import androidx.compose.material3.DrawerValue
@@ -20,6 +24,8 @@ import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -76,9 +82,9 @@ class MainActivity : ComponentActivity() {
                             )
                         },
                     ) { _ ->
-                        NavHost(navController = navController, startDestination = "home") {
+                        NavHost(navController = navController, startDestination = "incidents") {
                             composable("home") { Home(MapViewModel(), UserLocationViewModel(), displayErrorSnackbar) }
-                            composable("incidents") { Incidents() }
+                            composable("incidents") { Incidents(modifier = Modifier.padding(16.dp, 120.dp, 16.dp, 16.dp)) }
                         }
                     }
                 }

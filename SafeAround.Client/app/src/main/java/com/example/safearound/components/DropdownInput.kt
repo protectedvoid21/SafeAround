@@ -25,13 +25,14 @@ import com.example.safearound.helpers.getIconForCategory
 data class DropdownItem(val value: Int, val name: String, val icon: String? = null)
 
 @Composable
-fun DropdownInput(options: List<DropdownItem>, label: String, onItemSelected: (DropdownItem) -> Unit) {
+fun DropdownInput(options: List<DropdownItem>, label: String, onItemSelected: (DropdownItem) -> Unit, modifier: Modifier = Modifier) {
     var expanded by remember { mutableStateOf(false) }
     val textFieldState = rememberTextFieldState("")
 
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = { expanded = it },
+        modifier = modifier,
     ) {
         TextField(
             value = textFieldState.text.toString(),
