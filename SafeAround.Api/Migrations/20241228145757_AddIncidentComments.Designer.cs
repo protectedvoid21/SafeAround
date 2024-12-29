@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SafeAround.Api.Persistence;
@@ -11,9 +12,11 @@ using SafeAround.Api.Persistence;
 namespace SafeAround.Api.Migrations
 {
     [DbContext(typeof(SafeAroundDbContext))]
-    partial class SafeAroundDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241228145757_AddIncidentComments")]
+    partial class AddIncidentComments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

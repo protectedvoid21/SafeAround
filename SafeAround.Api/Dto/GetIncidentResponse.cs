@@ -1,6 +1,8 @@
+using System.Text.Json.Serialization;
+
 namespace SafeAround.Api.Dto;
 
-public class GetIncidentResponse
+public record GetIncidentResponse
 {
     public required int Id { get; set; }
     public required string Title { get; set; }
@@ -15,4 +17,7 @@ public class GetIncidentResponse
     
     public required Guid UserId { get; set; }
     public required float? DistanceInKm { get; set; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public required GetCommentResponse[]? Comments { get; set; }
 }

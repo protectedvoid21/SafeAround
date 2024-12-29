@@ -24,28 +24,13 @@ import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
-import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
 import kotlinx.coroutines.launch
 
 @Composable
 fun Map(mapViewModel: MapViewModel, locationViewModel: UserLocationViewModel, onError: (String) -> Unit) {
-    val uiSettings by remember {
-        mutableStateOf(
-            MapUiSettings(
-                mapToolbarEnabled = true,
-                myLocationButtonEnabled = true,
-            )
-        )
-    }
-
-    val properties by remember {
-        mutableStateOf(MapProperties(mapType = MapType.NORMAL))
-    }
-
     val scope = rememberCoroutineScope()
     val client = remember { SafeAroundClient() }
 
@@ -57,8 +42,7 @@ fun Map(mapViewModel: MapViewModel, locationViewModel: UserLocationViewModel, on
 
     GoogleMap(
         cameraPositionState = cameraPositionState,
-        properties = properties,
-        uiSettings = uiSettings,
+        properties = MapProperties(mapType = MapType.NORMAL, isMyLocationEnabled = true),
         onMapLongClick = { latLng ->
             createNewIncidentMarker = latLng
             scope.launch {
@@ -89,10 +73,10 @@ fun Map(mapViewModel: MapViewModel, locationViewModel: UserLocationViewModel, on
             )
         }
 
-        if(createNewIncidentMarker != null) {
+        createNewIncidentMarker?.let {
             Marker(
                 state = rememberMarkerState(
-                    position = createNewIncidentMarker!!
+                    position = it
                 ),
                 title = "Nowe zgłoszenie",
                 snippet = "Kliknij aby dodać zgłoszenie"
@@ -136,18 +120,12 @@ fun InitMap(locationViewModel: UserLocationViewModel, context: Context, cameraPo
             ) -> {
                 locationViewModel.fetchUserLocation(context)
             }
-
             else -> {
                 permissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
             }
         }
     }
     userLocation?.let {
-        Marker(
-            state = MarkerState(position = it),
-            title = "Twoja lokalizacja",
-            snippet = "Tutaj jest twoje położenie"
-        )
         cameraPositionState.position = CameraPosition.fromLatLngZoom(it, 12.5f)
     }
 }

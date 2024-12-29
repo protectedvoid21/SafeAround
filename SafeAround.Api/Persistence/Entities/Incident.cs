@@ -11,4 +11,6 @@ public class Incident : BaseTrackingEntity
     
     public IncidentCategory Category { get; set; }
     public required int CategoryId { get; set; }
+
+    public ICollection<IncidentComment> Comments { get; set; } = [];
 }

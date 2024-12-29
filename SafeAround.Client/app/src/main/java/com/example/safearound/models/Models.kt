@@ -27,6 +27,7 @@ data class Incident (
     val occurrenceDate: LocalDateTime,
     val userId: String,
     val distanceInKm: Double?,
+    val comments: List<Comment>? = emptyList(),
 )
 
 @Serializable
@@ -43,4 +44,13 @@ data class AddIncidentRequest (
     val categoryId: Int,
     val latitude: Double,
     val longitude: Double,
+)
+
+@Serializable
+data class  Comment (
+    val id: Int,
+    val userId: String,
+    val userName: String,
+    val content: String,
+    val createdOn: LocalDateTime,
 )

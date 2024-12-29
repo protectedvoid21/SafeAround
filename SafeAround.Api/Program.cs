@@ -1,9 +1,6 @@
+using Carter;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.EntityFrameworkCore;
-using SafeAround.Api;
-using SafeAround.Api.Helpers;
 using SafeAround.Api.Persistence;
 using SafeAround.Api.Persistence.Entities;
 using SafeAround.Api.Seeders;
@@ -16,10 +13,6 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddControllers(options =>
-{
-    options.Conventions.Add(new RouteTokenTransformerConvention(new SlugifyParameterTransformer()));
-});
 
 builder.Services.AddSerilog(config =>
 {
@@ -50,11 +43,14 @@ builder.Services.AddIdentity<AppUser, IdentityRole<Guid>>(options =>
     })
     .AddEntityFrameworkStores<SafeAroundDbContext>();
 
+builder.Services.AddCarter();
+
 builder.Services
     .AddScoped<IncidentService>()
     .AddScoped<UserSeeder>()
     .AddScoped<IncidentSeeder>()
     .AddScoped<IncidentCategorySeeder>()
+    .AddScoped<CommentSeeder>()
     .AddScoped<Seeder>();
 
 var app = builder.Build();
@@ -67,8 +63,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapControllers();
-
+app.MapCarter();
 app.UseAuthentication();
 app.UseAuthorization();
 

@@ -32,8 +32,16 @@ public class IncidentService
                 CategoryName = i.Category.Name,
                 CategoryCode = i.Category.Code,
                 UserId = i.User.Id,
-                DistanceInKm = null
-            }).FirstOrDefaultAsync();
+                DistanceInKm = null,
+                Comments = i.Comments.Select(c => new GetCommentResponse
+                {
+                    Id = c.Id,
+                    Content = c.Content,
+                    UserId = c.UserId,
+                    UserName = c.User.UserName ?? "Anonymous",
+                    CreatedOn = c.CreatedOn
+                }).ToArray()
+            }).FirstOrDefaultAsync(i => i.Id == id);
     }
     
     public async Task<ApiResponse> AddAsync(AddIncidentRequest request, Guid userId)
@@ -88,6 +96,7 @@ public class IncidentService
                 CategoryCode = i.Category.Code,
                 UserId = i.User.Id,
                 DistanceInKm = _dbContext.DistanceBetweenPoints(requestPoint.Latitude, requestPoint.Longitude, i.Latitude, i.Longitude) / 1000,
+                Comments = null
             })
             .Where(i => i.DistanceInKm <= radiusInKm)
             .OrderBy(i => i.DistanceInKm)
@@ -99,5 +108,29 @@ public class IncidentService
         }
 
         return incidents;
+    }
+
+    public async Task<ApiResponse> AddCommentAsync(AddCommentRequest request, Guid userId)
+    {
+        var incident = await _dbContext.Incidents.FindAsync(request.IncidentId);
+        if (incident == null)
+        {
+            return ApiResponse.Fail("Incident not found");
+        }
+        
+        //TODO: Remove this line when authentication is implemented
+        userId = _dbContext.Users.First().Id;
+        
+        var comment = new IncidentComment
+        {
+            IncidentId = request.IncidentId,
+            UserId = userId,
+            Content = request.Content
+        };
+        
+        _dbContext.Add(comment);
+        await _dbContext.SaveChangesAsync();
+        
+        return ApiResponse.Success("Comment added successfully");
     }
 }

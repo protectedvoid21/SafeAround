@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using SafeAround.Api.Helpers;
 using SafeAround.Api.Persistence.Entities;
 
 namespace SafeAround.Api.Persistence;
@@ -12,6 +11,7 @@ public class SafeAroundDbContext : IdentityDbContext<AppUser, IdentityRole<Guid>
 
     public DbSet<Incident> Incidents { get; set; }
     public DbSet<IncidentCategory> IncidentCategories { get; set; }
+    public DbSet<IncidentComment> IncidentComments { get; set; }
     
     private void UpdateBaseTrackingEntities()
     {

@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.example.safearound.components.IncidentSheet
 import com.example.safearound.components.Map
+import com.example.safearound.components.incidentview.IncidentSheet
 import com.example.safearound.modules.UserLocationViewModel
 import com.example.safearound.viewmodels.MapViewModel
 
@@ -16,7 +16,7 @@ fun Home(mapViewModel: MapViewModel, locationViewModel: UserLocationViewModel, o
 
     Box(Modifier.fillMaxSize()) {
         IncidentSheet(
-            clickedMarker = clickedIncident,
+            incidentId = clickedIncident?.id,
             onDismiss = {
                 mapViewModel.onMarkerClicked(null)
             }

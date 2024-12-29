@@ -3,17 +3,16 @@ package com.example.safearound.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,10 +21,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.safearound.helpers.distanceToString
+import com.example.safearound.helpers.formatForDisplay
 import com.example.safearound.helpers.getIconForCategory
 import com.example.safearound.models.Incident
 import kotlinx.datetime.LocalDateTime
@@ -82,12 +83,13 @@ fun IncidentItem(incident: Incident) {
             )
             .padding(16.dp, 4.dp)
             .fillMaxWidth()
-            .height(IntrinsicSize.Max)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier.fillMaxHeight()
+            modifier = Modifier
+                .fillMaxHeight()
+                .padding(vertical = 8.dp)
+                .fillMaxWidth(0.25f)
         ) {
             Icon(
                 painter = painterResource(getIconForCategory(incident.categoryCode)),
@@ -99,6 +101,12 @@ fun IncidentItem(incident: Incident) {
                 distanceToString(incident.distanceInKm!!),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
+                overflow = TextOverflow.Clip
+            )
+            Text(
+                incident.occurrenceDate.formatForDisplay(),
+                fontSize = 10.sp,
+                fontWeight = FontWeight.Bold
             )
         }
         Column(
@@ -111,9 +119,10 @@ fun IncidentItem(incident: Incident) {
                 fontWeight = FontWeight.Bold
             )
             Text(incident.title,
-                fontSize = 14.sp)
+                fontSize = 16.sp)
             Text(incident.description,
-                fontSize = 12.sp)
+                style = MaterialTheme.typography.bodySmall,
+            )
         }
     }
 }
