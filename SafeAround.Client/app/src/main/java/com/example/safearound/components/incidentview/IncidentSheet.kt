@@ -1,13 +1,14 @@
 package com.example.safearound.components.incidentview
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.PrimaryTabRow
-import androidx.compose.material3.Tab
+import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -18,10 +19,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.safearound.R
 import com.example.safearound.models.Incident
 import com.example.safearound.services.SafeAroundClient
+
+data class NavigationRailItem(
+    val content: @Composable () -> Unit,
+    val label: String,
+    val icon: @Composable () -> Unit
+)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,10 +52,22 @@ fun IncidentSheet(incidentId: Int?, onDismiss: () -> Unit) {
         }
     }
 
-    val sections = listOf<Pair<String, @Composable () -> Unit>>(
-        "Szczegóły" to @Composable { IncidentDetails(incident!!) },
-        "Zdjęcia" to @Composable { Text("TODO") },
-        "Komentarze" to @Composable { IncidentComments(incident?.comments!!) }
+    val sections = listOf(
+        NavigationRailItem(
+            label = "Szczegóły",
+            content = { IncidentDetails(incident!!) },
+            icon = { Icon(painter = painterResource(id = R.drawable.info), contentDescription = null) }
+        ),
+        NavigationRailItem(
+            label = "Zdjęcia",
+            content = { Text("TODOasdasd") },
+            icon = { Icon(painter = painterResource(id = R.drawable.image), contentDescription = null) }
+        ),
+        NavigationRailItem(
+            label = "Komentarze",
+            content = { IncidentComments(incident?.comments) },
+            icon = { Icon(painter = painterResource(id = R.drawable.comments), contentDescription = null) }
+        )
     )
 
     incident?.let {
@@ -61,16 +81,19 @@ fun IncidentSheet(incidentId: Int?, onDismiss: () -> Unit) {
                 modifier = Modifier.fillMaxHeight(0.5f),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
-                sections[selectedIndex].second()
-                PrimaryTabRow(
-                    selectedTabIndex = selectedIndex,
+                sections[selectedIndex].content()
+                Row(
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    sections.forEachIndexed { index, section ->
-                        Log.d("IncidentSheet", "Is $index selected: ${selectedIndex == index}")
-                        Tab(
+                    sections.forEachIndexed { index, item ->
+                        NavigationRailItem(
                             selected = selectedIndex == index,
-                            onClick = { selectedIndex = index },
-                            text = { Text(text = section.first, maxLines = 2, overflow = TextOverflow.Ellipsis) }
+                            onClick = {
+                                selectedIndex = index
+                            },
+                            label = { Text(item.label) },
+                            icon = item.icon
                         )
                     }
                 }
@@ -82,7 +105,6 @@ fun IncidentSheet(incidentId: Int?, onDismiss: () -> Unit) {
 @Preview
 @Composable
 fun CommentsPreview() {
-
     IncidentCommentsPreview()
 }
 
