@@ -6,9 +6,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,26 +25,20 @@ import kotlinx.datetime.LocalDateTime
 
 @Composable
 fun IncidentComments(comments: List<Comment>?) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier.padding(8.dp)
-    ) {
-        Text(
-            getCommentsText(comments?.size ?: 0),
-            style = MaterialTheme.typography.titleMedium,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth()
-        )
-        if (!comments.isNullOrEmpty()) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-            ) {
-                comments.forEach { comment ->
-                    Comment(comment)
-                }
-            }
+    Text(
+        getCommentsText(comments?.size ?: 0),
+        style = MaterialTheme.typography.titleMedium,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.fillMaxWidth()
+    )
+
+    if (!comments.isNullOrEmpty()) {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier
+                .padding(8.dp)
+        ) {
+            items(comments) { Comment(it) }
         }
     }
 }
@@ -57,7 +51,8 @@ fun Comment(comment: Comment) {
                 color = MaterialTheme.colorScheme.surfaceDim,
                 shape = RoundedCornerShape(8.dp)
             )
-            .padding(12.dp).fillMaxWidth()
+            .padding(12.dp)
+            .fillMaxWidth()
     ) {
         Row(
             verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,

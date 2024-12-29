@@ -8,9 +8,9 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -33,35 +33,31 @@ import kotlinx.datetime.LocalDateTime
 
 @Composable
 fun IncidentsList(incidents: List<Incident>, onRadiusChanged: (radius: Int) -> Unit) {
-    Column(
+    LazyColumn (
         verticalArrangement = Arrangement.spacedBy(20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .verticalScroll(
-                rememberScrollState(),
-            )
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(
-                text = "Zgłoszenia",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-            RadiusDropdown(onRadiusChanged = onRadiusChanged)
-        }
-        Column(
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            if (incidents.any()) {
-                incidents.forEach { incident ->
-                    IncidentItem(incident)
-                }
+        item {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "Zgłoszenia",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+                RadiusDropdown(onRadiusChanged = onRadiusChanged)
             }
-            else {
+        }
+        if (incidents.any()) {
+            items(incidents) { incident ->
+                IncidentItem(incident)
+            }
+        }
+        else {
+            item {
                 Text(
                     "Brak zarejestrowanych zgłoszeń w okolicy",
                     fontSize = 16.sp,
