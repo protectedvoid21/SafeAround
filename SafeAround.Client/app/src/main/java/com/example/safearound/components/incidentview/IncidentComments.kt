@@ -29,16 +29,13 @@ fun IncidentComments(comments: List<Comment>?) {
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier.padding(8.dp)
     ) {
-        if (comments.isNullOrEmpty()) {
-            Text("Brak komentarzy", style = MaterialTheme.typography.bodyMedium)
-        }
-        else {
-            Text(
-                getCommentsText(comments.size),
-                style = MaterialTheme.typography.titleMedium,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
+        Text(
+            getCommentsText(comments?.size ?: 0),
+            style = MaterialTheme.typography.titleMedium,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
+        if (!comments.isNullOrEmpty()) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier
