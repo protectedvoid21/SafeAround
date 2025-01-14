@@ -14,7 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.safearound.components.IncidentsList
 import com.example.safearound.models.Incident
-import com.example.safearound.modules.UserLocationViewModel
+import com.example.safearound.viewmodels.UserLocationViewModel
 import com.example.safearound.services.SafeAroundClient
 
 @Composable

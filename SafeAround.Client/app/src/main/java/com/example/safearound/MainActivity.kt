@@ -27,7 +27,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.safearound.components.DrawerMenu
-import com.example.safearound.modules.UserLocationViewModel
+import com.example.safearound.viewmodels.UserLocationViewModel
 import com.example.safearound.pages.Home
 import com.example.safearound.pages.Incidents
 import com.example.safearound.ui.theme.SafeAroundTheme

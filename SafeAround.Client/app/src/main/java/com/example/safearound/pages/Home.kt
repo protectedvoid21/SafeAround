@@ -7,7 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.example.safearound.components.Map
 import com.example.safearound.components.incidentview.IncidentSheet
-import com.example.safearound.modules.UserLocationViewModel
+import com.example.safearound.viewmodels.UserLocationViewModel
 import com.example.safearound.viewmodels.MapViewModel
 
 @Composable

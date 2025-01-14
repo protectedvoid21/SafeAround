@@ -14,9 +14,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import com.example.safearound.models.Incident
-import com.example.safearound.modules.UserLocationViewModel
 import com.example.safearound.services.SafeAroundClient
 import com.example.safearound.viewmodels.MapViewModel
+import com.example.safearound.viewmodels.UserLocationViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -55,7 +55,9 @@ fun Map(mapViewModel: MapViewModel, locationViewModel: UserLocationViewModel, on
         InitMap(locationViewModel, context, cameraPositionState)
 
         LaunchedEffect(locationViewModel.userLocation.value) {
-            if (locationViewModel.userLocation.value == null) return@LaunchedEffect
+            if (locationViewModel.userLocation.value == null) {
+                return@LaunchedEffect
+            }
             scope.launch {
                 incidents = client.getIncidents(
                     latitude = locationViewModel.userLocation.value!!.latitude,

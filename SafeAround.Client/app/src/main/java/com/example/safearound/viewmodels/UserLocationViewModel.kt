@@ -1,4 +1,4 @@
-package com.example.safearound.modules
+package com.example.safearound.viewmodels
 
 import android.content.Context
 import android.content.pm.PackageManager
