@@ -12,8 +12,8 @@ using SafeAround.Api.Persistence;
 namespace SafeAround.Api.Migrations
 {
     [DbContext(typeof(SafeAroundDbContext))]
-    [Migration("20241228145757_AddIncidentComments")]
-    partial class AddIncidentComments
+    [Migration("20250114215308_AddIncidentImage")]
+    partial class AddIncidentImage
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -395,6 +395,42 @@ namespace SafeAround.Api.Migrations
                     b.ToTable("incident_comments", (string)null);
                 });
 
+            modelBuilder.Entity("SafeAround.Api.Persistence.Entities.IncidentImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("created_on");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("file_name");
+
+                    b.Property<int>("IncidentId")
+                        .HasColumnType("integer")
+                        .HasColumnName("incident_id");
+
+                    b.Property<DateTime>("ModifiedOn")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("modified_on");
+
+                    b.HasKey("Id")
+                        .HasName("pk_incident_images");
+
+                    b.HasIndex("IncidentId")
+                        .HasDatabaseName("ix_incident_images_incident_id");
+
+                    b.ToTable("incident_images", (string)null);
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", null)
@@ -492,6 +528,18 @@ namespace SafeAround.Api.Migrations
                     b.Navigation("Incident");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SafeAround.Api.Persistence.Entities.IncidentImage", b =>
+                {
+                    b.HasOne("SafeAround.Api.Persistence.Entities.Incident", "Incident")
+                        .WithMany()
+                        .HasForeignKey("IncidentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_incident_images_incidents_incident_id");
+
+                    b.Navigation("Incident");
                 });
 
             modelBuilder.Entity("SafeAround.Api.Persistence.Entities.Incident", b =>

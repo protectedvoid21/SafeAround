@@ -12,6 +12,7 @@ public class SafeAroundDbContext : IdentityDbContext<AppUser, IdentityRole<Guid>
     public DbSet<Incident> Incidents { get; set; }
     public DbSet<IncidentCategory> IncidentCategories { get; set; }
     public DbSet<IncidentComment> IncidentComments { get; set; }
+    public DbSet<IncidentImage> IncidentImages { get; set; }
     
     private void UpdateBaseTrackingEntities()
     {

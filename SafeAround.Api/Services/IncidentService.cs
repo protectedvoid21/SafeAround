@@ -44,6 +44,30 @@ public class IncidentService
             }).FirstOrDefaultAsync(i => i.Id == id);
     }
     
+    public async Task<ApiResponse> UploadImageAsync(UploadIncidentImageRequest request)
+    {
+        var incident = await _dbContext.Incidents.FindAsync(request.IncidentId);
+        if (incident == null)
+        {
+            return ApiResponse.Fail("Incident not found");
+        }
+        
+        string imagePath = Path.Combine(Environment.CurrentDirectory, Constants.ImagesDirectory, request.FileName);
+
+        await using var stream = new FileStream(imagePath, FileMode.Create);
+        await request.ImageStream.CopyToAsync(stream);
+        
+        var incidentImage = new IncidentImage
+        {
+            IncidentId = request.IncidentId,
+            FileName = request.FileName,
+        };
+        _dbContext.Add(incidentImage);
+        await _dbContext.SaveChangesAsync();
+
+        return ApiResponse.Success("Image uploaded successfully");
+    }
+    
     public async Task<ApiResponse> AddAsync(AddIncidentRequest request, Guid userId)
     {
         //TODO: Remove this line when authentication is implemented

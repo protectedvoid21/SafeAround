@@ -14,6 +14,7 @@ public class IncidentsModule : ICarterModule
         
         group.MapGet("/", async ([AsParameters] GetIncidentsAroundRequest request, IncidentService incidentService) =>
         {
+            request.Radius = 9999;
             var validation = new GetIncidentsAroundRequestValidator().Validate(request);
             if (!validation.IsValid)
             {
@@ -32,6 +33,18 @@ public class IncidentsModule : ICarterModule
         group.MapPost("/", async (AddIncidentRequest incidentRequest, IncidentService incidentService) =>
         {
             ApiResponse result = await incidentService.AddAsync(incidentRequest, Guid.NewGuid());
+            return Results.Ok(result);
+        });
+        
+        group.MapPost("/image/{incidentId:int}", async ([FromRoute] int incidentId, IFormFile request, IncidentService incidentService) =>
+        {
+            var uploadRequest = new UploadIncidentImageRequest
+            {
+                IncidentId = incidentId,
+                FileName = request.FileName,
+                ImageStream = request.OpenReadStream()
+            };
+            ApiResponse result = await incidentService.UploadImageAsync(uploadRequest);
             return Results.Ok(result);
         });
         
