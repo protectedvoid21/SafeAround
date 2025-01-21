@@ -14,7 +14,6 @@ public class IncidentsModule : ICarterModule
         
         group.MapGet("/", async ([AsParameters] GetIncidentsAroundRequest request, IncidentService incidentService) =>
         {
-            request.Radius = 9999;
             var validation = new GetIncidentsAroundRequestValidator().Validate(request);
             if (!validation.IsValid)
             {
