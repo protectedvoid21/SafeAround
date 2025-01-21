@@ -78,4 +78,4 @@ var scope = app.Services.CreateScope();
 var seeder = scope.ServiceProvider.GetRequiredService<Seeder>();
 seeder.Seed();
 
-app.Run();
+app.Run(args[0]);
