@@ -4,10 +4,10 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 
 @Serializable
-open class ApiResponse {
-    val isSuccess: Boolean = false
+open class ApiResponse(
+    val isSuccess: Boolean = false,
     val message: String = ""
-}
+)
 
 @Serializable
 class ApiResponseWithData<T> : ApiResponse() {

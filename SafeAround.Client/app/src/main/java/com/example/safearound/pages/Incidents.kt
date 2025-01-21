@@ -14,11 +14,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.safearound.components.IncidentsList
 import com.example.safearound.models.Incident
+import com.example.safearound.services.ISafeAroundClient
 import com.example.safearound.viewmodels.UserLocationViewModel
-import com.example.safearound.services.SafeAroundClient
 
 @Composable
 fun Incidents(
+    safeAroundClient: ISafeAroundClient,
     locationViewModel: UserLocationViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
@@ -29,7 +30,7 @@ fun Incidents(
     LaunchedEffect(locationViewModel.userLocation.value, radius) {
         locationViewModel.fetchUserLocation(context)
         locationViewModel.userLocation.value?.let {
-            incidents = SafeAroundClient().getIncidents(
+            incidents = safeAroundClient.getIncidents(
                 latitude = it.latitude,
                 longitude = it.longitude,
                 radius = radius

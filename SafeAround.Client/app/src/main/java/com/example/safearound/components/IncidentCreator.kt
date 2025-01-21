@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.safearound.services.SafeAroundClient
 import com.example.safearound.viewmodels.IncidentViewModel
 import com.google.android.gms.maps.model.LatLng
 
@@ -64,7 +65,7 @@ fun IncidentForm(
     latLng: LatLng,
     onSuccess: () -> Unit,
     onError: (message: String) -> Unit,
-    incidentViewModel: IncidentViewModel = viewModel()
+    incidentViewModel: IncidentViewModel = viewModel(factory = IncidentViewModelFactory(SafeAroundClient()))
 ) {
     Column(
         modifier = Modifier

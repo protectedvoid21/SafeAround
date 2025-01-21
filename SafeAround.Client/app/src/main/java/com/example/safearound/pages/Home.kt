@@ -7,8 +7,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import com.example.safearound.components.Map
 import com.example.safearound.components.incidentview.IncidentSheet
-import com.example.safearound.viewmodels.UserLocationViewModel
+import com.example.safearound.services.SafeAroundClient
 import com.example.safearound.viewmodels.MapViewModel
+import com.example.safearound.viewmodels.UserLocationViewModel
 
 @Composable
 fun Home(mapViewModel: MapViewModel, locationViewModel: UserLocationViewModel, onError: (String) -> Unit) {
@@ -16,11 +17,12 @@ fun Home(mapViewModel: MapViewModel, locationViewModel: UserLocationViewModel, o
 
     Box(Modifier.fillMaxSize()) {
         IncidentSheet(
+            safeAroundClient = SafeAroundClient(),
             incidentId = clickedIncident?.id,
             onDismiss = {
                 mapViewModel.onMarkerClicked(null)
             }
         )
-        Map(mapViewModel, locationViewModel, onError)
+        Map(SafeAroundClient(), mapViewModel, locationViewModel, onError)
     }
 }

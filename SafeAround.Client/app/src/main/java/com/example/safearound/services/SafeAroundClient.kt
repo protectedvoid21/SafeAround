@@ -16,60 +16,55 @@ import io.ktor.http.contentType
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-class SafeAroundClient {
+interface ISafeAroundClient {
+    suspend fun getIncidents(latitude: Double, longitude: Double, radius: Int): List<Incident>
+    suspend fun getIncident(id: Int): Incident?
+    suspend fun getCategories(): List<Category>
+    suspend fun addIncident(request: AddIncidentRequest): ApiResponse
+    suspend fun addComment(incidentId: Int, comment: String): ApiResponse
+}
+
+class SafeAroundClient : ISafeAroundClient {
     private val client = HttpClient(CIO)
     private val json = Json { ignoreUnknownKeys = true }
 
     companion object {
-        private const val BASE_URL = "http://192.168.31.156:5178"
+        private const val BASE_URL = "http://192.168.0.24:5178"
     }
 
-    suspend fun getIncidents(latitude: Double, longitude: Double, radius: Int): List<Incident> {
+    override suspend fun getIncidents(latitude: Double, longitude: Double, radius: Int): List<Incident> {
         val response: HttpResponse = client.get("$BASE_URL/incidents?latitude=$latitude&longitude=$longitude&radius=$radius")
         val content = response.bodyAsText()
-
-        return json.decodeFromString<List<Incident>>(content)
+        return json.decodeFromString(content)
     }
 
-    suspend fun getIncident(id: Int): Incident? {
+    override suspend fun getIncident(id: Int): Incident? {
         val response: HttpResponse = client.get("$BASE_URL/incidents/$id")
         val content = response.bodyAsText()
-
-        return json.decodeFromString<Incident?>(content)
+        return json.decodeFromString(content)
     }
 
-    suspend fun getCategories(): List<Category> {
+    override suspend fun getCategories(): List<Category> {
         val response: HttpResponse = client.get("$BASE_URL/categories")
         val content = response.bodyAsText()
-
-        return json.decodeFromString<List<Category>>(content)
+        return json.decodeFromString(content)
     }
 
-    suspend fun addIncident(request: AddIncidentRequest): ApiResponse {
+    override suspend fun addIncident(request: AddIncidentRequest): ApiResponse {
         val response = client.post("$BASE_URL/incidents") {
             contentType(ContentType.Application.Json)
-            setBody(json.encodeToString(
-                AddIncidentRequest(
-                    request.title,
-                    request.description,
-                    request.categoryId,
-                    request.latitude,
-                    request.longitude
-                )
-            ))
+            setBody(json.encodeToString(request))
         }
-
         val content = response.bodyAsText()
-        return json.decodeFromString<ApiResponse>(content)
+        return json.decodeFromString(content)
     }
 
-    suspend fun addComment(incidentId: Int, comment: String): ApiResponse {
+    override suspend fun addComment(incidentId: Int, comment: String): ApiResponse {
         val response = client.post("$BASE_URL/incidents/$incidentId/comments") {
             contentType(ContentType.Application.Json)
             setBody(json.encodeToString(mapOf("comment" to comment)))
         }
-
         val content = response.bodyAsText()
-        return json.decodeFromString<ApiResponse>(content)
+        return json.decodeFromString(content)
     }
 }

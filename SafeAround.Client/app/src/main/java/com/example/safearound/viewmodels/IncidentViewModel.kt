@@ -9,11 +9,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.safearound.components.DropdownItem
 import com.example.safearound.models.AddIncidentRequest
-import com.example.safearound.services.SafeAroundClient
+import com.example.safearound.services.ISafeAroundClient
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
 
-class IncidentViewModel : ViewModel() {
+class IncidentViewModel(private val safeAroundClient: ISafeAroundClient) : ViewModel() {
     var title by mutableStateOf("")
         private set
     var description by mutableStateOf("")
@@ -30,14 +30,14 @@ class IncidentViewModel : ViewModel() {
 
     private fun fetchCategories() {
         viewModelScope.launch {
-            val categories = SafeAroundClient().getCategories()
+            val categories = safeAroundClient.getCategories()
             _categoriesDropdown.value = categories.map { DropdownItem(it.id, it.name, it.iconCode) }
         }
     }
 
     public fun send(latLng: LatLng, onSuccess: () -> Unit, onError: (String) -> Unit) {
         viewModelScope.launch {
-            val response = SafeAroundClient().addIncident(
+            val response = safeAroundClient.addIncident(
                 AddIncidentRequest(
                     title,
                     description,

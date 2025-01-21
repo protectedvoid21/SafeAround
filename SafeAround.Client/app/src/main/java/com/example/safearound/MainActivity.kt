@@ -30,6 +30,7 @@ import com.example.safearound.components.DrawerMenu
 import com.example.safearound.viewmodels.UserLocationViewModel
 import com.example.safearound.pages.Home
 import com.example.safearound.pages.Incidents
+import com.example.safearound.services.SafeAroundClient
 import com.example.safearound.ui.theme.SafeAroundTheme
 import com.example.safearound.viewmodels.MapViewModel
 import kotlinx.coroutines.launch
@@ -81,7 +82,7 @@ class MainActivity : ComponentActivity() {
                     ) { _ ->
                         NavHost(navController = navController, startDestination = "home") {
                             composable("home") { Home(MapViewModel(), UserLocationViewModel(), displayErrorSnackbar) }
-                            composable("incidents") { Incidents(modifier = Modifier.padding(16.dp, 120.dp, 16.dp, 16.dp)) }
+                            composable("incidents") { Incidents(SafeAroundClient(), modifier = Modifier.padding(16.dp, 120.dp, 16.dp, 16.dp)) }
                         }
                     }
                 }

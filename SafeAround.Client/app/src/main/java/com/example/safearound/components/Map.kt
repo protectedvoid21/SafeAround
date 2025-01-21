@@ -11,10 +11,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.core.content.ContextCompat
 import com.example.safearound.models.Incident
-import com.example.safearound.services.SafeAroundClient
+import com.example.safearound.services.ISafeAroundClient
 import com.example.safearound.viewmodels.MapViewModel
 import com.example.safearound.viewmodels.UserLocationViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -30,9 +32,14 @@ import com.google.maps.android.compose.rememberMarkerState
 import kotlinx.coroutines.launch
 
 @Composable
-fun Map(mapViewModel: MapViewModel, locationViewModel: UserLocationViewModel, onError: (String) -> Unit) {
+fun Map(
+    safeAroundClient: ISafeAroundClient,
+    mapViewModel: MapViewModel,
+    locationViewModel: UserLocationViewModel,
+    onError: (String) -> Unit
+) {
     val scope = rememberCoroutineScope()
-    val client = remember { SafeAroundClient() }
+    val client = remember { safeAroundClient }
 
     val cameraPositionState = rememberCameraPositionState()
     val context: Context = LocalContext.current
@@ -42,7 +49,7 @@ fun Map(mapViewModel: MapViewModel, locationViewModel: UserLocationViewModel, on
 
     GoogleMap(
         cameraPositionState = cameraPositionState,
-        properties = MapProperties(mapType = MapType.NORMAL, isMyLocationEnabled = true),
+        properties = MapProperties(mapType = MapType.NORMAL, isMyLocationEnabled = false),
         onMapLongClick = { latLng ->
             createNewIncidentMarker = latLng
             scope.launch {
@@ -50,7 +57,8 @@ fun Map(mapViewModel: MapViewModel, locationViewModel: UserLocationViewModel, on
                     CameraUpdateFactory.newLatLngZoom(latLng, 18f)
                 )
             }
-        }
+        },
+        modifier = Modifier.testTag("GMap")
     ) {
         InitMap(locationViewModel, context, cameraPositionState)
 

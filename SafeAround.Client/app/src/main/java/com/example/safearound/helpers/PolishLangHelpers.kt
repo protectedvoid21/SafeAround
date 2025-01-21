@@ -35,6 +35,7 @@ fun getCommentsText(commentCount: Int): String {
     return when (commentCount) {
         0 -> "Brak komentarzy!"
         1 -> "1 komentarz"
+        in 10..20 -> "$commentCount komentarzy"
         else -> when (commentCount % 10) {
             in 2..4 -> "$commentCount komentarze"
             else -> "$commentCount komentarzy"

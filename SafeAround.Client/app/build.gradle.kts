@@ -10,6 +10,13 @@ android {
     namespace = "com.example.safearound"
     compileSdk = 34
 
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+            isReturnDefaultValues = true
+        }
+    }
+
     packaging {
         resources.excludes.add("META-INF/versions/9/OSGI-INF/MANIFEST.MF")
     }
@@ -47,6 +54,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.robolectric)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.datetime)
@@ -68,7 +76,11 @@ dependencies {
     implementation(libs.play.services.location)
     implementation(libs.identity.jvm)
     implementation(libs.identity.doctypes.jvm)
+    implementation(libs.androidx.junit.ktx)
+    implementation(libs.androidx.ui.test.junit4.android)
     testImplementation(libs.junit)
+    testImplementation(libs.mockk.android)
+    testImplementation(libs.mockk)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))

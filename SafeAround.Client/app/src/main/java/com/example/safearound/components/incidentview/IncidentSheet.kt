@@ -23,7 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.safearound.R
 import com.example.safearound.models.Incident
-import com.example.safearound.services.SafeAroundClient
+import com.example.safearound.services.ISafeAroundClient
 
 data class NavigationRailItem(
     val content: @Composable () -> Unit,
@@ -33,7 +33,7 @@ data class NavigationRailItem(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun IncidentSheet(incidentId: Int?, onDismiss: () -> Unit) {
+fun IncidentSheet(safeAroundClient: ISafeAroundClient, incidentId: Int?, onDismiss: () -> Unit) {
     var incident by remember { mutableStateOf<Incident?>(null) }
     val sheetState = rememberModalBottomSheetState(true)
 
@@ -41,7 +41,7 @@ fun IncidentSheet(incidentId: Int?, onDismiss: () -> Unit) {
 
     LaunchedEffect(incidentId) {
         incidentId?.let {
-            incident = SafeAroundClient().getIncident(incidentId)
+            incident = safeAroundClient.getIncident(incidentId)
         }
         if (incidentId == null) {
             incident = null
