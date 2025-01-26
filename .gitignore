@@ -7,3 +7,5 @@ SafeAround.Client/.kotlin
 SafeAround.Client/.idea
 localhost-key.pem
 localhost.pem
+SafeAround.Api.Tests/bin
+SafeAround.Api.Tests/obj

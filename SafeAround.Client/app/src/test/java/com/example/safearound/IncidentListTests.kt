@@ -18,7 +18,6 @@ class IncidentsListTest {
 
     @Test
     fun emptyIncidentsListShouldHaveExplicitTextAboutNoIncidents() {
-        // Test no incidents message displayed
         composeTestRule.setContent {
             IncidentsList(incidents = emptyList(), onRadiusChanged = {})
         }

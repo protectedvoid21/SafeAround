@@ -67,7 +67,6 @@ class MapTest {
 
     @Test
     fun testMapDisplaysIncidents() {
-        // Assuming incidents have a title or description that can be checked
         composeTestRule.onNodeWithTag("GMap").assertExists()
         coVerify { safeAroundClient.getIncidents(any(), any(), any()) }
         composeTestRule.onNodeWithText("Incident Title", useUnmergedTree = true).assertIsDisplayed()
@@ -75,25 +74,15 @@ class MapTest {
 
     @Test
     fun testMapLongClickCreatesMarker() {
-        // Simulate a long click on the map
         composeTestRule.onNodeWithTag("GMap").performClick()
-
-        // Check if the marker is created
         composeTestRule.onNodeWithText("Nowe zgłoszenie").assertIsDisplayed()
     }
 
     @Test
     fun testIncidentCreatorDismiss() {
-        // Simulate a long click on the map
         composeTestRule.onNodeWithTag("GMap").performClick()
-
-        // Check if the marker is created
         composeTestRule.onNodeWithText("Nowe zgłoszenie").assertIsDisplayed()
-
-        // Simulate dismissing the incident creator
         composeTestRule.onNodeWithText("Dismiss").performClick()
-
-        // Check if the marker is removed
         composeTestRule.onNodeWithText("Nowe zgłoszenie").assertDoesNotExist()
     }
 }
